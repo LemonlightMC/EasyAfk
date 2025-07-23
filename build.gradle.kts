@@ -11,11 +11,6 @@ plugins {
 
 repositories {
     mavenLocal()
-    mavenCentral()
-    
-    maven {
-        url = uri("https://maven.enginehub.org/repo/")
-    }
     maven {
         url = uri("https://hub.spigotmc.org/nexus/content/groups/public/")
     }
@@ -38,16 +33,22 @@ repositories {
         url = uri("https://repo.codemc.org/repository/maven-public")
     }
 
-    // PlaceholderAPI Repo
     maven {
         url = uri("https://repo.extendedclip.com/releases/")
     }
 
-    //Essentials Repo
+    maven {
+        url = uri("https://maven.enginehub.org/repo/")
+    }
+
     maven {
         url = uri("https://repo.essentialsx.net/releases/")
     }
-    //DiscordSRV Repo
+
+    maven {
+        url = uri("https://papermc.io/repo/repository/maven-public/")
+    }
+
     maven {
         url = uri("https://nexus.scarsz.me/content/groups/public/")
     }
@@ -56,10 +57,8 @@ repositories {
 dependencies {
     compileOnly(libs.org.spigotmc.spigot.api)
     compileOnly(libs.me.clip.placeholderapi)
-    compileOnly("net.essentialsx:EssentialsX:2.20.1")
-    compileOnly("net.luckperms:api:5.4")
-    compileOnly("org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT")
-    compileOnly("com.discordsrv:discordsrv:1.29.0")
+    compileOnly(libs.net.essentialsx.essentialsx)
+    compileOnly(libs.com.discordsrv.discordsrv)
     compileOnly("com.github.NEZNAMY:TAB-API:5.2.1") {
         exclude(group = "com.google.code.gson", module = "gson")
         exclude(group = "com.google.guava", module = "guava")
@@ -68,7 +67,6 @@ dependencies {
         exclude(group = "com.google.code.gson", module = "gson")
         exclude(group = "com.google.guava", module = "guava")
     }
-
 }
 
 group = "com.julizey"

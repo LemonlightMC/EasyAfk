@@ -29,5 +29,4 @@ softdepend:
   - WorldGuard
   - PlaceholderAPI
   - Essentials
-  - LuckPerms
   - DiscordSRV
