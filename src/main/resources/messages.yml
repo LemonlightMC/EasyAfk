@@ -1,0 +1,19 @@
+afk: "&cYou are AFK. Move to avoid being kicked."
+afk-broadcast: "&cPlayer&a %player% &cis now AFK"
+afk-title: "&e> AFK <"
+afk-subtitle: "&7You are now AFK"
+
+unafk: "&aYou are no longer AFK"
+unafk-title: "&a> Welcome back! <"
+unafk-subtitle: "&7You are no longer AFK"
+unafk-broadcast: "&aPlayer&7 %player% &ais not longer AFK"
+
+kick: "&cYou have been kicked from this server for being AFK too long!"
+kick-broadcast: "&cPlayer&7 %player% &cis AFK too long and has been kicked"
+
+command-onlyPlayers: "&cOnly players can use this command!"
+command-cooldown: "&cYou must wait %time% seconds before using this command again!"
+command-status: "AFK mode is &7%status%!"
+command-unknown: "&cUnknown command. Type &7/afk help &cfor help."
+command-noPermission: "&cYou do not have permission to use this command!"
+command-help: "AFK Help:\n/afk help - Display this help message.\n/afk status - Display your AFK status.\n/afk gui - Open the AFK player overview GUI.\n/afk reload - Reload the config"

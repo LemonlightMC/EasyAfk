@@ -1,0 +1,171 @@
+# Config for EasyAFK
+prefix: "&7[&b&lAFK&7]&r"
+
+# check for AFK every x seconds
+afk-checking:
+  enabled: true
+  interval: 1
+
+# Prevent players from bypassing AFK
+anti:
+  infinite-waterflow: false
+  infinite-vehicle: false
+
+  blockPlace: false
+  blockBreak: false
+
+  microMove: false
+  microMoveDistance: 0.1
+
+  rotationOnly: false
+  rotationDistance: 10.0
+
+  macroPattern: false
+  macroPatternDistance: 2.0
+
+  jump: false
+  jumpDistance: 2
+
+# Bypass AFK mode
+bypass-afk: true
+# Bypass AFK kick
+bypass-kick: true
+
+# disable AFK mode when a player moves
+disable-on-move: false
+# disable AFK mode when a player leaves the server
+disable-on-leave: true
+# disable AFK mode when a player joins the server (makes Auto Relogging possible)
+disable-on-kick: true
+
+# Ignore AFK detection in these worlds
+ignored-worlds:
+  - some_world
+
+# Cooldown for enabled/disabled in seconds
+cooldown: 2
+
+afk:
+  # Timeout in seconds
+  timeout: 20
+  message: "&cYou are AFK. Move to avoid being kicked."
+
+  broadcast:
+    # Enable broadcast message to all online players when player is AFK
+    enabled: false
+    # Placeholders:
+    # %player% - Display name of player
+    message: "&cPlayer&a %player% &cis now AFK"
+  title:
+    enabled: true
+    title: "&eAFK"
+    subtitle: "&7You are now AFK"
+
+  # Animation when a player goes into AFK
+  animation:
+    # Enable the sounds and particles
+    enabled:
+      sounds: true
+      particles: true
+    # sound definitions
+    sounds:
+      "1":
+        type: "BLOCK_WOOD_BREAK"
+        volume: 1.0
+        pitch: 1.0
+      "2":
+        type: "ENTITY_EXPERIENCE_ORB_PICKUP"
+        volume: 0.5
+        pitch: 1.5
+    # particle definitions
+    particles:
+      "1":
+        type: "HAPPY_VILLAGER"
+        amount: 20
+        offsetX: 1.0
+        offsetY: 1.0
+        offsetZ: 1.0
+        extra: 0.1
+      "2":
+        type: "DRAGON_BREATH"
+        amount: 10
+        offsetX: 1.0
+        offsetY: 1.0
+        offsetZ: 1.0
+        extra: 0.1
+      "3":
+        type: "CHERRY_LEAVES"
+        amount: 20
+        offsetX: 1.0
+        offsetY: 1.0
+        offsetZ: 1.0
+        extra: 0.1
+
+unafk:
+  broadcast:
+    # Broadcast a message when a player is not longer AFK
+    enabled: false
+    # Placeholders:
+    # %player% - Display name of player
+    message: "&aPlayer&7 %player% &ais not longer AFK"
+  title:
+    enabled: true
+    title: "&aWelcome back!"
+    subtitle: "&7You are no longer AFK"
+
+  # Animation when a player is no longer AFK
+  animation:
+    # Enable the sounds and particles
+    enabled:
+      sounds: true
+      particles: true
+    # sound definitions
+    sounds:
+      "1":
+        type: "BLOCK_GRASS_BREAK"
+        volume: 1.0
+        pitch: 1.0
+      "2":
+        type: "BLOCK_WOOD_HIT"
+        volume: 0.5
+        pitch: 0.5
+    # particle definitions
+    particles:
+      "1":
+        type: "SMOKE"
+        amount: 20
+        offsetX: 1.5
+        offsetY: 1.0
+        offsetZ: 1.0
+        extra: 0.1
+
+kick:
+  # Enable the kick function after being AFK for x amount of time
+  enabled: true
+  # Enable the kick function when the lobby is full
+  enabledWhenFull: true
+  # Timeout in seconds
+  timeout: 30
+  message: "&cYou have been kicked from this server for being AFK too long!"
+
+integration:
+  # https://dev.bukkit.org/projects/worldguard
+  worldguard: true
+  # https://www.spigotmc.org/resources/tab-1-5-1-21.57806/
+  tab:
+    enabled: true
+    prefix: "&c[AFK] "
+
+# Database for storing AFK players
+database: "sqlite"
+clear-on-reload: true
+mysql:
+  enabled: false
+  host: "localhost"
+  port: 3306
+  database: "easyafk"
+  username: "root"
+  password: ""
+sqlite:
+  enabled: true
+  database: "easyafk"

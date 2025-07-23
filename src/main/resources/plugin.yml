@@ -1,0 +1,33 @@
+name: EasyAFK
+description: Manage your AFK players easily
+main: com.julizey.easyafk.EasyAFK
+version: 1.4.2
+api-version: 1.20.6
+commands:
+  afk:
+    description: Enable the AFK mode
+    usage: /afk
+    permission: easyafk.use
+permissions:
+  easyafk.use:
+    description: Allows the player to use the /afk command
+    default: true
+  easyafk.bypass.*:
+    description: Allows the player to bypass AFK checks
+    default: op
+  easyafk.bypass.afk:
+    description: Allows the player to bypass AFK checks
+    default: op
+  easyafk.bypass.kick:
+    description: Allows the player to bypass AFK kick
+    default: op
+  easyafk.admin:
+    description: Allows the player to use admin commands
+    default: op
+softdepend:
+  - TAB
+  - WorldGuard
+  - PlaceholderAPI
+  - Essentials
+  - LuckPerms
+  - DiscordSRV
