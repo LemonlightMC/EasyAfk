@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Main",
+      "request": "launch",
+      "mainClass": "com.julizey.easyafk.EasyAFK",
+      "projectName": "EasyAFK"
+    },
+    {
+      "type": "java",
+      "request": "attach",
+      "name": "Attach to Spigot Server",
+      "port": 5005,
+      "hostName": "localhost",
+      "projectName": "EasyAFK",
+      "sourceRoots": [
+        "${workspaceFolder}/src/main/java/com/julizey/easyafk",
+        "${workspaceFolder}/src/main/resources"
+      ]
+    }
+  ]
+}
