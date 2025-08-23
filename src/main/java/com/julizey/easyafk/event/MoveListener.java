@@ -1,7 +1,7 @@
 package com.julizey.easyafk.event;
 
 import com.julizey.easyafk.EasyAFK;
-import com.julizey.easyafk.hooks.DatabaseManager;
+import com.julizey.easyafk.database.DatabaseManager;
 import com.julizey.easyafk.utils.Location;
 import java.util.HashMap;
 import java.util.Map;

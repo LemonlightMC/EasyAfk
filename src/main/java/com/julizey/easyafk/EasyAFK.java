@@ -1,10 +1,10 @@
 package com.julizey.easyafk;
 
+import com.julizey.easyafk.database.DatabaseManager;
 import com.julizey.easyafk.event.MoveListener;
 import com.julizey.easyafk.event.PlayerQuitListener;
 import com.julizey.easyafk.gui.AfkPlayerActionsGUI;
 import com.julizey.easyafk.gui.AfkPlayerOverviewGUI;
-import com.julizey.easyafk.hooks.DatabaseManager;
 import com.julizey.easyafk.hooks.TabIntegration;
 import com.julizey.easyafk.hooks.WorldGuardIntegration;
 import com.julizey.easyafk.state.AfkState;

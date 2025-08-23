@@ -1,4 +1,4 @@
-package com.julizey.easyafk.hooks;
+package com.julizey.easyafk.database;
 
 import com.julizey.easyafk.EasyAFK;
 import java.util.UUID;

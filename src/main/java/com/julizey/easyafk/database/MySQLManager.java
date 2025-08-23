@@ -1,4 +1,4 @@
-package com.julizey.easyafk.hooks;
+package com.julizey.easyafk.database;
 
 import com.julizey.easyafk.EasyAFK;
 import com.julizey.easyafk.utils.Text;
@@ -7,19 +7,17 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.UUID;
 
-public class SQLiteManager implements DatabaseManager.DatabaseProvider {
+public class MySQLManager implements DatabaseManager.DatabaseProvider {
 
   private Connection connection;
 
-  public SQLiteManager() {
+  public MySQLManager() {
     try {
       openConnection();
-      createTableIfNotExists();
     } catch (final SQLException ex) {
-      Text.warn("Could not connect to SQLite database!");
+      Text.warn("Could not connect to MySQL server!");
       ex.printStackTrace();
     }
   }
@@ -28,7 +26,7 @@ public class SQLiteManager implements DatabaseManager.DatabaseProvider {
     try {
       return connection != null && !connection.isClosed();
     } catch (final SQLException ex) {
-      Text.warn("SQLite connection is not available!");
+      Text.warn("MySQL connection is not available!");
       return false;
     }
   }
@@ -57,12 +55,9 @@ public class SQLiteManager implements DatabaseManager.DatabaseProvider {
         insertStatement.setLong(2, lastActive);
         insertStatement.executeUpdate();
       }
-      selectStatement.close();
-      resultSet.close();
-      insertStatement.close();
     } catch (final SQLException ex) {
       ex.printStackTrace();
-      Text.warn("Could not add or update AFK player in SQLite!");
+      Text.warn("Could not add or update AFK player in MySQL!");
     }
   }
 
@@ -76,9 +71,8 @@ public class SQLiteManager implements DatabaseManager.DatabaseProvider {
       );
       statement.setString(1, playerId.toString());
       statement.executeUpdate();
-      statement.close();
     } catch (final SQLException ex) {
-      Text.warn("Could not remove AFK player from SQLite!");
+      Text.warn("Could not remove AFK player from MySQL!");
       ex.printStackTrace();
     }
   }
@@ -90,13 +84,11 @@ public class SQLiteManager implements DatabaseManager.DatabaseProvider {
       );
       statement.setString(1, playerId.toString());
       final ResultSet resultSet = statement.executeQuery();
-      final boolean exists = resultSet.next();
-      statement.close();
-      resultSet.close();
-      return exists;
+      return resultSet.next();
     } catch (final SQLException ex) {
-      Text.warn("Could not check if AFK player exists in SQLite!");
+      Text.warn("Could not check if AFK player exists in MySQL!");
       ex.printStackTrace();
+
       return false;
     }
   }
@@ -120,7 +112,7 @@ public class SQLiteManager implements DatabaseManager.DatabaseProvider {
       }
       connection.close();
     } catch (final SQLException ex) {
-      Text.warn("Could not close SQLite connection!");
+      Text.warn("Could not close MySQL connection!");
       ex.printStackTrace();
     }
   }
@@ -129,23 +121,21 @@ public class SQLiteManager implements DatabaseManager.DatabaseProvider {
     if (connection != null && !connection.isClosed()) {
       return;
     }
-    synchronized (SQLiteManager.class) {
+    synchronized (MySQLManager.class) {
       if (connection != null && !connection.isClosed()) {
         return;
       }
       connection =
-        DriverManager.getConnection("jdbc:sqlite:" + EasyAFK.config.dbPath);
+        DriverManager.getConnection(
+          "jdbc:mysql://" +
+          EasyAFK.config.host +
+          ":" +
+          EasyAFK.config.port +
+          "/" +
+          EasyAFK.config.database,
+          EasyAFK.config.username,
+          EasyAFK.config.password
+        );
     }
-  }
-
-  private void createTableIfNotExists() throws SQLException {
-    final String createTableSQL =
-      "CREATE TABLE IF NOT EXISTS afk_players (" +
-      "player_id TEXT PRIMARY KEY," +
-      "last_active INTEGER" +
-      ")";
-    final Statement stmt = connection.createStatement();
-    stmt.execute(createTableSQL);
-    stmt.close();
   }
 }

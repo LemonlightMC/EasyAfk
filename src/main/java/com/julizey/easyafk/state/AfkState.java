@@ -1,7 +1,7 @@
 package com.julizey.easyafk.state;
 
 import com.julizey.easyafk.EasyAFK;
-import com.julizey.easyafk.hooks.DatabaseManager;
+import com.julizey.easyafk.database.DatabaseManager;
 import com.julizey.easyafk.utils.ParticleContainer;
 import com.julizey.easyafk.utils.SoundContainer;
 import com.julizey.easyafk.utils.Text;

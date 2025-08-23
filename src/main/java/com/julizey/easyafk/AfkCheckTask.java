@@ -1,6 +1,6 @@
 package com.julizey.easyafk;
 
-import com.julizey.easyafk.hooks.DatabaseManager;
+import com.julizey.easyafk.database.DatabaseManager;
 import com.julizey.easyafk.utils.Text;
 import com.julizey.easyafk.utils.Text.Replaceable;
 import org.bukkit.Bukkit;
