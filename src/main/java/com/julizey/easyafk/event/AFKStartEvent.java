@@ -5,15 +5,18 @@ import org.bukkit.entity.Player;
 public class AFKStartEvent {
 
   private final Player player;
+  private final long time;
 
-  /**
-   * @param player           The player being set as AFK
-   */
   public AFKStartEvent(Player player) {
     this.player = player;
+    this.time = System.currentTimeMillis();
   }
 
   public Player getPlayer() {
     return player;
+  }
+
+  public long getTime() {
+    return time;
   }
 }

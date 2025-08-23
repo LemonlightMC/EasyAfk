@@ -5,12 +5,11 @@ import org.bukkit.entity.Player;
 public class AFKStopEvent {
 
   private final Player player;
+  private final long duration;
 
-  /**
-   * @param player           The player being set as AFK
-   */
-  public AFKStopEvent(Player player) {
+  public AFKStopEvent(Player player, long time) {
     this.player = player;
+    this.duration = System.currentTimeMillis() - time;
   }
 
   public Player getPlayer() {
@@ -18,6 +17,6 @@ public class AFKStopEvent {
   }
 
   public long getTotalTime() {
-    return 0L;
+    return duration;
   }
 }
