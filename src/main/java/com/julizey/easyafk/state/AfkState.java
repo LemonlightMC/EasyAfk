@@ -2,8 +2,6 @@ package com.julizey.easyafk.state;
 
 import com.julizey.easyafk.EasyAFK;
 import com.julizey.easyafk.database.DatabaseManager;
-import com.julizey.easyafk.utils.ParticleContainer;
-import com.julizey.easyafk.utils.SoundContainer;
 import com.julizey.easyafk.utils.Text;
 import com.julizey.easyafk.utils.Text.Replaceable;
 import java.util.HashSet;
@@ -48,13 +46,7 @@ public class AfkState {
         20
       );
     }
-
-    for (final ParticleContainer particle : EasyAFK.config.particleEnableContainers) {
-      particle.play(player);
-    }
-    for (final SoundContainer sound : EasyAFK.config.soundEnableContainers) {
-      sound.play(player);
-    }
+    EasyAFK.instance.animationManager.play(player, "enable");
 
     final UUID playerId = player.getUniqueId();
     afkPlayers.add(playerId);
@@ -90,13 +82,7 @@ public class AfkState {
         20
       );
     }
-
-    for (final ParticleContainer particle : EasyAFK.config.particleDisableContainers) {
-      particle.play(player);
-    }
-    for (final SoundContainer sound : EasyAFK.config.soundDisableContainers) {
-      sound.play(player);
-    }
+    EasyAFK.instance.animationManager.play(player, "disable");
 
     final UUID playerId = player.getUniqueId();
     afkPlayers.remove(playerId);

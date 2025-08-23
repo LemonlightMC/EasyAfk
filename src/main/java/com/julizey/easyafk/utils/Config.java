@@ -1,12 +1,8 @@
-package com.julizey.easyafk;
+package com.julizey.easyafk.utils;
 
-import com.julizey.easyafk.utils.ParticleContainer;
-import com.julizey.easyafk.utils.SoundContainer;
-import com.julizey.easyafk.utils.Text;
+import com.julizey.easyafk.EasyAFK;
 import java.nio.file.Path;
-import java.util.HashSet;
 import java.util.List;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class Config {
@@ -33,12 +29,6 @@ public class Config {
   public boolean afkTitleEnabled;
   public boolean unafkBroadcastEnabled;
   public boolean unafkTitleEnabled;
-
-  // effects
-  public HashSet<SoundContainer> soundEnableContainers = new HashSet<SoundContainer>();
-  public HashSet<ParticleContainer> particleEnableContainers = new HashSet<ParticleContainer>();
-  public HashSet<SoundContainer> soundDisableContainers = new HashSet<SoundContainer>();
-  public HashSet<ParticleContainer> particleDisableContainers = new HashSet<ParticleContainer>();
 
   // listener
   public boolean antiVehicle;
@@ -105,9 +95,6 @@ public class Config {
       configFile.getBoolean("unafk.broadcast.enabled", false);
     unafkTitleEnabled = configFile.getBoolean("unafk.title.enabled", true);
 
-    // effects
-    reloadEffects();
-
     // integrations
     worldGuardEnabled = configFile.getBoolean("integration.worldguard", true);
     tabEnabled = configFile.getBoolean("integration.tab.enabled", true);
@@ -155,51 +142,6 @@ public class Config {
       throw new IllegalArgumentException(
         "Invalid database type: " + databaseType
       );
-    }
-  }
-
-  public void reloadEffects() {
-    final boolean withEnableParticles = configFile.getBoolean(
-      "afk.animation.enabled.particles",
-      true
-    );
-    final boolean withEnableSounds = configFile.getBoolean(
-      "afk.animation.enabled.sounds",
-      true
-    );
-    final boolean withDisableParticles = configFile.getBoolean(
-      "unafk.animation.enabled.particles",
-      true
-    );
-    final boolean withDisableSounds = configFile.getBoolean(
-      "unafk.animation.enabled.sounds",
-      true
-    );
-
-    ConfigurationSection section;
-
-    particleEnableContainers.clear();
-    if (withEnableParticles) {
-      section = configFile.getConfigurationSection("afk.animation.particles");
-      particleEnableContainers = ParticleContainer.fromMultiple(section);
-    }
-
-    particleDisableContainers.clear();
-    if (withDisableParticles) {
-      section = configFile.getConfigurationSection("unafk.animation.particles");
-      particleDisableContainers = ParticleContainer.fromMultiple(section);
-    }
-
-    soundEnableContainers.clear();
-    if (withEnableSounds) {
-      section = configFile.getConfigurationSection("afk.animation.sounds");
-      soundEnableContainers = SoundContainer.fromMultiple(section);
-    }
-
-    soundDisableContainers.clear();
-    if (withDisableSounds) {
-      section = configFile.getConfigurationSection("unafk.animation.sounds");
-      soundDisableContainers = SoundContainer.fromMultiple(section);
     }
   }
 }

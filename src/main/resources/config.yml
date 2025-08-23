@@ -42,7 +42,7 @@ disable-on-kick: true
 ignored-worlds:
   - some_world
 
-# Cooldown for enabled/disabled in seconds
+# Cooldown for the /afk Command in seconds
 cooldown: 2
 
 afk:
@@ -61,13 +61,20 @@ afk:
     title: "&eAFK"
     subtitle: "&7You are now AFK"
 
-  # Animation when a player goes into AFK
-  animation:
-    # Enable the sounds and particles
-    enabled:
-      sounds: true
-      particles: true
-    # sound definitions
+unafk:
+  broadcast:
+    # Broadcast a message when a player is not longer AFK
+    enabled: false
+    # Placeholders:
+    # %player% - Display name of player
+    message: "&aPlayer&7 %player% &ais not longer AFK"
+  title:
+    enabled: true
+    title: "&aWelcome back!"
+    subtitle: "&7You are no longer AFK"
+
+effects:
+  enable:
     sounds:
       "1":
         type: "BLOCK_WOOD_BREAK"
@@ -77,7 +84,6 @@ afk:
         type: "ENTITY_EXPERIENCE_ORB_PICKUP"
         volume: 0.5
         pitch: 1.5
-    # particle definitions
     particles:
       "1":
         type: "HAPPY_VILLAGER"
@@ -100,26 +106,7 @@ afk:
         offsetY: 1.0
         offsetZ: 1.0
         extra: 0.1
-
-unafk:
-  broadcast:
-    # Broadcast a message when a player is not longer AFK
-    enabled: false
-    # Placeholders:
-    # %player% - Display name of player
-    message: "&aPlayer&7 %player% &ais not longer AFK"
-  title:
-    enabled: true
-    title: "&aWelcome back!"
-    subtitle: "&7You are no longer AFK"
-
-  # Animation when a player is no longer AFK
-  animation:
-    # Enable the sounds and particles
-    enabled:
-      sounds: true
-      particles: true
-    # sound definitions
+  disable:
     sounds:
       "1":
         type: "BLOCK_GRASS_BREAK"
@@ -129,7 +116,6 @@ unafk:
         type: "BLOCK_WOOD_HIT"
         volume: 0.5
         pitch: 0.5
-    # particle definitions
     particles:
       "1":
         type: "SMOKE"
@@ -138,7 +124,6 @@ unafk:
         offsetY: 1.0
         offsetZ: 1.0
         extra: 0.1
-
 kick:
   # Enable the kick function after being AFK for x amount of time
   enabled: true

@@ -8,6 +8,8 @@ import com.julizey.easyafk.gui.AfkPlayerOverviewGUI;
 import com.julizey.easyafk.hooks.TabIntegration;
 import com.julizey.easyafk.hooks.WorldGuardIntegration;
 import com.julizey.easyafk.state.AfkState;
+import com.julizey.easyafk.utils.AnimationManager;
+import com.julizey.easyafk.utils.Config;
 import com.julizey.easyafk.utils.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,6 +23,7 @@ public class EasyAFK extends JavaPlugin {
   public WorldGuardIntegration worldGuardIntegration = null;
   public AfkPlayerOverviewGUI afkPlayerOverviewGUI;
   public AfkPlayerActionsGUI afkPlayerActionsGUI;
+  public AnimationManager animationManager;
   public AfkCheckTask afkChecker;
   public AfkState afkState;
 
@@ -34,19 +37,24 @@ public class EasyAFK extends JavaPlugin {
   public void onEnable() {
     afkState = new AfkState();
     afkChecker = new AfkCheckTask();
+    animationManager = new AnimationManager(config.configFile, "effects");
     afkPlayerOverviewGUI = new AfkPlayerOverviewGUI();
     afkPlayerActionsGUI = new AfkPlayerActionsGUI();
 
+    // Events
     getServer().getPluginManager().registerEvents(new MoveListener(), this);
     getServer()
       .getPluginManager()
       .registerEvents(new PlayerQuitListener(), this);
     getServer().getPluginManager().registerEvents(afkPlayerOverviewGUI, this);
     getServer().getPluginManager().registerEvents(afkPlayerActionsGUI, this);
-    EasyAFKCommand afkCommand = new EasyAFKCommand();
 
+    // Command
+    EasyAFKCommand afkCommand = new EasyAFKCommand();
     getCommand("afk").setExecutor(afkCommand);
     getCommand("afk").setTabCompleter(afkCommand);
+
+    // Hooks
     Bukkit
       .getScheduler()
       .runTaskAsynchronously(
@@ -62,7 +70,7 @@ public class EasyAFK extends JavaPlugin {
         }
       );
 
-    afkChecker.runTaskTimer(this, 20L, 20L);
+    afkChecker.runTaskTimerAsynchronously(this, 20L, 20L);
   }
 
   public void onDisable() {
@@ -80,10 +88,11 @@ public class EasyAFK extends JavaPlugin {
 
   public void reload(boolean full) {
     try {
-      instance.saveDefaultConfig();
-      instance.reloadConfig();
+      saveDefaultConfig();
+      reloadConfig();
       Text.reload();
       config.reload(getConfig());
+      animationManager.reload();
       DatabaseManager.reload();
 
       if (full) {
