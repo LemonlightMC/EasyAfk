@@ -17,18 +17,11 @@ public class AfkState {
   public HashSet<UUID> afkPlayers = new HashSet<UUID>();
 
   public void toggle(final Player player) {
-    Bukkit
-      .getScheduler()
-      .runTaskAsynchronously(
-        EasyAFK.instance,
-        () -> {
-          if (afkPlayers.contains(player.getUniqueId())) {
-            disableAFK(player);
-          } else {
-            enableAFK(player);
-          }
-        }
-      );
+    if (afkPlayers.contains(player.getUniqueId())) {
+      disableAFK(player);
+    } else {
+      enableAFK(player);
+    }
   }
 
   public void enableAFK(final Player player) {

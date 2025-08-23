@@ -40,33 +40,17 @@ public class EasyAFKCommand implements TabExecutor {
   }
 
   private void handleCommand(CommandSender sender, String[] args) {
+    if (!checkPermission(sender, "easyafk.use")) {
+      return;
+    }
+    if (!handleCooldown(sender)) {
+      return;
+    }
     if (args.length == 0) {
       if (!(sender instanceof Player)) {
         Text.send(sender, "messages.command-onlyPlayers");
         return;
       }
-      if (!checkPermission(sender, "easyafk.use")) {
-        return;
-      }
-      Player player = (Player) sender;
-
-      long now = System.currentTimeMillis();
-      UUID uuid = player.getUniqueId();
-      if (cooldowns.containsKey(uuid)) {
-        long lastUsed = cooldowns.get(uuid);
-        if (now - lastUsed < EasyAFK.config.command_cooldown) {
-          long secondsLeft =
-            (EasyAFK.config.command_cooldown - (now - lastUsed)) / 1000 + 1;
-          Text.send(
-            sender,
-            "messages.command-cooldown",
-            new Text.Replaceable("%time%", String.valueOf(secondsLeft))
-          );
-          return;
-        }
-      }
-      cooldowns.put(uuid, now);
-
       EasyAFK.instance.afkState.toggle((Player) sender);
       return;
     }
@@ -76,9 +60,6 @@ public class EasyAFKCommand implements TabExecutor {
         sendHelp(sender);
       }
       case "status" -> {
-        if (!checkPermission(sender, "easyafk.use")) {
-          return;
-        }
         if (!(sender instanceof Player)) {
           Text.send(sender, "messages.command-onlyPlayers");
           return;
@@ -93,6 +74,33 @@ public class EasyAFKCommand implements TabExecutor {
               : "disabled"
           )
         );
+      }
+      case "toggle" -> {
+        if (!(sender instanceof Player)) {
+          Text.send(sender, "messages.command-onlyPlayers");
+          return;
+        }
+        Player p = getTarget((Player) sender, args);
+        if (p == null) return;
+        EasyAFK.instance.afkState.toggle(p);
+      }
+      case "enable" -> {
+        if (!(sender instanceof Player)) {
+          Text.send(sender, "messages.command-onlyPlayers");
+          return;
+        }
+        Player p = getTarget((Player) sender, args);
+        if (p == null) return;
+        EasyAFK.instance.afkState.enableAFK(p);
+      }
+      case "disable" -> {
+        if (!(sender instanceof Player)) {
+          Text.send(sender, "messages.command-onlyPlayers");
+          return;
+        }
+        Player p = getTarget((Player) sender, args);
+        if (p == null) return;
+        EasyAFK.instance.afkState.disableAFK(p);
       }
       case "reload" -> {
         if (!checkPermission(sender, "easyafk.admin")) {
@@ -121,16 +129,6 @@ public class EasyAFKCommand implements TabExecutor {
             }
           );
       }
-      case "toggle" -> {
-        if (!checkPermission(sender, "easyafk.admin")) {
-          return;
-        }
-        if (!(sender instanceof Player)) {
-          Text.send(sender, "messages.command-onlyPlayers");
-          return;
-        }
-        EasyAFK.instance.afkState.toggle((Player) sender);
-      }
       default -> {
         Text.send(sender, "messages.command-unknown");
       }
@@ -150,6 +148,47 @@ public class EasyAFKCommand implements TabExecutor {
 
   private static void sendHelp(CommandSender sender) {
     Text.send(sender, "messages.command-help");
+  }
+
+  private Player getTarget(Player sender, String[] args) {
+    if (args.length < 2) {
+      return sender;
+    }
+    if (!checkPermission(sender, "easyafk.admin")) {
+      Text.send(sender, "messages.command-noPermission");
+      return null;
+    }
+    Player target = Bukkit.getPlayer(args[1]);
+    if (target != null) {
+      return target;
+    }
+    Text.send(
+      sender,
+      "messages.command-playerNotFound",
+      new Text.Replaceable("%player%", args[1])
+    );
+    return sender;
+  }
+
+  private boolean handleCooldown(CommandSender sender) {
+    long now = System.currentTimeMillis();
+    UUID uuid = ((Player) sender).getUniqueId();
+    if (!cooldowns.containsKey(uuid)) {
+      cooldowns.put(uuid, now);
+      return false;
+    }
+    long lastUsed = cooldowns.get(uuid);
+    if (now - lastUsed > EasyAFK.config.command_cooldown) {
+      return false;
+    }
+    long secondsLeft =
+      (EasyAFK.config.command_cooldown - (now - lastUsed)) / 1000 + 1;
+    Text.send(
+      sender,
+      "messages.command-cooldown",
+      new Text.Replaceable("%time%", String.valueOf(secondsLeft))
+    );
+    return true;
   }
 
   @Override
