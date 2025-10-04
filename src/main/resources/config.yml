@@ -2,7 +2,7 @@
 prefix: "&7[&b&lAFK&7]&r"
 
 # check for AFK every x seconds
-afk-checking:
+checker:
   enabled: true
   interval: 1
 

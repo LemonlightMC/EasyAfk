@@ -72,7 +72,7 @@ public class Config {
     command_cooldown = configFile.getLong("cooldown", 3) * 1000;
 
     // afk check task
-    interval = configFile.getLong("checker", 1) * 20L;
+    interval = configFile.getLong("checker.interval", 1) * 20L;
     kickTimeout = configFile.getLong("kick.timeout") * 1000L;
     kickEnabled = configFile.getBoolean("kick.enabled", true);
     kickEnabledWhenFull = configFile.getBoolean("kick.enabledWhenFull", true);
@@ -109,11 +109,11 @@ public class Config {
     antiBlockPlace = configFile.getBoolean("anti.block-place", false);
 
     antiMicroMove = configFile.getBoolean("microMove", false);
-    antiMicroMoveDistance = configFile.getDouble("microMoveDistance", 0.3F);
-    antiRotationOnly = configFile.getBoolean("rotationOnly", false);
-    antiRotationDistance = configFile.getDouble("rotationDistance", 10.0F);
-    antiMacroPattern = configFile.getBoolean("macroPattern", false);
-    antiMacroPatternDistance = configFile.getDouble("macroPatternDistance", 0.3F);
+    antiMicroMoveDistance = configFile.getDouble("anti.microMoveDistance", 0.3F);
+    antiRotationOnly = configFile.getBoolean("anti.rotationOnly", false);
+    antiRotationDistance = configFile.getDouble("anti.rotationDistance", 10.0F);
+    antiMacroPattern = configFile.getBoolean("anti.macroPattern", false);
+    antiMacroPatternDistance = configFile.getDouble("anti.macroPatternDistance", 0.3F);
     antiJump = configFile.getBoolean("anti.jump", false);
     antiJumpDistance = configFile.getDouble("anti.jumpDistance", 0.3F);
 
