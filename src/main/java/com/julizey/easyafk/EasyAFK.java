@@ -44,8 +44,8 @@ public class EasyAFK extends JavaPlugin {
     // Events
     getServer().getPluginManager().registerEvents(new MoveListener(), this);
     getServer()
-      .getPluginManager()
-      .registerEvents(new PlayerQuitListener(), this);
+        .getPluginManager()
+        .registerEvents(new PlayerQuitListener(), this);
     getServer().getPluginManager().registerEvents(afkPlayerOverviewGUI, this);
     getServer().getPluginManager().registerEvents(afkPlayerActionsGUI, this);
 
@@ -56,25 +56,29 @@ public class EasyAFK extends JavaPlugin {
 
     // Hooks
     Bukkit
-      .getScheduler()
-      .runTaskAsynchronously(
-        EasyAFK.instance,
-        () -> {
-          if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
-            tabIntegration = new TabIntegration();
-          }
-          if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-            worldGuardIntegration = new WorldGuardIntegration();
-          }
-          DatabaseManager.setup();
-        }
-      );
+        .getScheduler()
+        .runTaskAsynchronously(
+            EasyAFK.instance,
+            () -> {
+              if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
+                tabIntegration = new TabIntegration();
+              }
+              if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
+                worldGuardIntegration = new WorldGuardIntegration();
+              }
+              DatabaseManager.setup();
+            });
 
-    afkChecker.runTaskTimerAsynchronously(this, 20L, 20L);
+    afkChecker.runTaskTimerAsynchronously(
+        this,
+        config.interval,
+        config.interval);
   }
 
   public void onDisable() {
-    if (afkChecker != null) afkChecker.cancel();
+    if (afkChecker != null) {
+      afkChecker.cancel();
+    }
     if (tabIntegration != null) {
       tabIntegration.unload();
       tabIntegration = null;

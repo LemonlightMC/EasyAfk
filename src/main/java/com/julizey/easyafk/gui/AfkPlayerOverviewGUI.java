@@ -27,12 +27,10 @@ public class AfkPlayerOverviewGUI implements Listener {
 
   public void openGUI(Player player, int page) {
     List<UUID> afkPlayers = new java.util.ArrayList<>(
-      EasyAFK.instance.afkState.afkPlayers
-    );
+        EasyAFK.instance.afkState.afkPlayers);
     int pageSize = 45;
     int totalPages = (int) Math.ceil(
-      (double) afkPlayers.size() / (double) pageSize
-    );
+        (double) afkPlayers.size() / (double) pageSize);
     if (page < 1) {
       page = 1;
     } else if (page > totalPages) {
@@ -40,25 +38,23 @@ public class AfkPlayerOverviewGUI implements Listener {
     }
 
     Inventory inventory = Bukkit.createInventory(
-      (InventoryHolder) null,
-      54,
-      this.title + " - Page " + page
-    );
+        (InventoryHolder) null,
+        54,
+        this.title + " - Page " + page);
     if (!afkPlayers.isEmpty()) {
       int startIndex = (page - 1) * pageSize;
       int endIndex = Math.min(startIndex + pageSize, afkPlayers.size());
 
       for (int i = startIndex; i < endIndex; ++i) {
         OfflinePlayer p = Bukkit.getOfflinePlayer(afkPlayers.get(i));
-        if (p == null) continue;
+        if (p == null)
+          continue;
         inventory.addItem(new ItemStack[] { getPlayerHead(p) });
       }
     }
 
-    ItemStack prevPageItem =
-      this.createButtonItem(ChatColor.GREEN + "Previous Page", Material.ARROW);
-    ItemStack nextPageItem =
-      this.createButtonItem(ChatColor.GREEN + "Next Page", Material.ARROW);
+    ItemStack prevPageItem = this.createButtonItem(ChatColor.GREEN + "Previous Page", Material.ARROW);
+    ItemStack nextPageItem = this.createButtonItem(ChatColor.GREEN + "Next Page", Material.ARROW);
     if (page > 1) {
       inventory.setItem(45, prevPageItem);
     }
@@ -108,29 +104,22 @@ public class AfkPlayerOverviewGUI implements Listener {
 
     if (clickedItem.getType() == Material.PLAYER_HEAD) {
       String playerName = ChatColor.stripColor(
-        clickedItem.getItemMeta().getDisplayName()
-      );
+          clickedItem.getItemMeta().getDisplayName());
       EasyAFK.instance.afkPlayerActionsGUI.openGUI(
-        player,
-        Bukkit.getPlayer(playerName)
-      );
+          player,
+          Bukkit.getPlayer(playerName));
     } else if (clickedItem.getType() == Material.ARROW) {
       int currentPage = Integer.parseInt(
-        title.substring(title.lastIndexOf(" ") + 1)
-      );
-      if (
-        clickedItem
+          title.substring(title.lastIndexOf(" ") + 1));
+      if (clickedItem
           .getItemMeta()
           .getDisplayName()
-          .equals(ChatColor.GREEN + "Previous Page")
-      ) {
+          .equals(ChatColor.GREEN + "Previous Page")) {
         this.openGUI(player, currentPage - 1);
-      } else if (
-        clickedItem
+      } else if (clickedItem
           .getItemMeta()
           .getDisplayName()
-          .equals(ChatColor.GREEN + "Next Page")
-      ) {
+          .equals(ChatColor.GREEN + "Next Page")) {
         this.openGUI(player, currentPage + 1);
       }
     }

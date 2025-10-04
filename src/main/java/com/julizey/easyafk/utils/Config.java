@@ -9,9 +9,9 @@ public class Config {
 
   public FileConfiguration configFile;
 
-  public long command_cooldown = 3000;
-
+  public long command_cooldown;
   // afk check task
+  public long interval;
   public long kickTimeout;
   public boolean kickEnabled;
   public boolean kickEnabledWhenFull;
@@ -72,6 +72,7 @@ public class Config {
     command_cooldown = configFile.getLong("cooldown", 3) * 1000;
 
     // afk check task
+    interval = configFile.getLong("checker", 1) * 20L;
     kickTimeout = configFile.getLong("kick.timeout") * 1000L;
     kickEnabled = configFile.getBoolean("kick.enabled", true);
     kickEnabledWhenFull = configFile.getBoolean("kick.enabledWhenFull", true);
@@ -91,17 +92,14 @@ public class Config {
     unafkSubtitle = Text.format("messages.unafk-subtitle", true, false);
     afkBroadcastEnabled = configFile.getBoolean("afk.broadcast.enabled", false);
     afkTitleEnabled = configFile.getBoolean("afk.title.enabled", true);
-    unafkBroadcastEnabled =
-      configFile.getBoolean("unafk.broadcast.enabled", false);
+    unafkBroadcastEnabled = configFile.getBoolean("unafk.broadcast.enabled", false);
     unafkTitleEnabled = configFile.getBoolean("unafk.title.enabled", true);
 
     // integrations
     worldGuardEnabled = configFile.getBoolean("integration.worldguard", true);
     tabEnabled = configFile.getBoolean("integration.tab.enabled", true);
-    tabPrefix =
-      Text.convertColor(
-        configFile.getString("integration.tab.prefix", "&c[AFK]")
-      );
+    tabPrefix = Text.convertColor(
+        configFile.getString("integration.tab.prefix", "&c[AFK]"));
 
     // anti
     antiVehicle = configFile.getBoolean("anti.infinite-vehicle", false);
@@ -115,8 +113,7 @@ public class Config {
     antiRotationOnly = configFile.getBoolean("rotationOnly", false);
     antiRotationDistance = configFile.getDouble("rotationDistance", 10.0F);
     antiMacroPattern = configFile.getBoolean("macroPattern", false);
-    antiMacroPatternDistance =
-      configFile.getDouble("macroPatternDistance", 0.3F);
+    antiMacroPatternDistance = configFile.getDouble("macroPatternDistance", 0.3F);
     antiJump = configFile.getBoolean("anti.jump", false);
     antiJumpDistance = configFile.getDouble("anti.jumpDistance", 0.3F);
 
@@ -126,12 +123,11 @@ public class Config {
 
     if (databaseType.equals("sqlite")) {
       database = configFile.getString("sqlite.database", "easyafk");
-      database =
-        Path
+      database = Path
           .of(EasyAFK.instance.getDataFolder().getAbsolutePath(), database)
           .toAbsolutePath()
           .toString() +
-        ".db";
+          ".db";
     } else if (databaseType.equals("mysql")) {
       host = configFile.getString("mysql.host", "localhost");
       port = configFile.getInt("mysql.port", 3306);
@@ -140,8 +136,7 @@ public class Config {
       password = configFile.getString("mysql.password", "");
     } else {
       throw new IllegalArgumentException(
-        "Invalid database type: " + databaseType
-      );
+          "Invalid database type: " + databaseType);
     }
   }
 }

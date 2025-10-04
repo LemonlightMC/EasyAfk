@@ -22,26 +22,21 @@ public class AfkPlayerActionsGUI implements Listener {
   private String title = ChatColor.DARK_GRAY + "Player Actions";
   private static HashMap<UUID, UUID> targetPlayers = new HashMap<>();
 
-  public AfkPlayerActionsGUI() {}
+  public AfkPlayerActionsGUI() {
+  }
 
   public void openGUI(Player opener, Player targetPlayer) {
     targetPlayers.put(opener.getUniqueId(), targetPlayer.getUniqueId());
     Inventory inventory = Bukkit.createInventory(
-      (InventoryHolder) null,
-      9,
-      this.title
-    );
-    ItemStack kickItem =
-      this.createButtonItem(ChatColor.RED + "Kick Player", Material.BARRIER);
-    ItemStack alertItem =
-      this.createButtonItem(ChatColor.YELLOW + "Send Alert", Material.PAPER);
-    ItemStack teleportItem =
-      this.createButtonItem(
-          ChatColor.GREEN + "Teleport to Player",
-          Material.COMPASS
-        );
-    ItemStack toggleAFKItem =
-      this.createButtonItem(ChatColor.YELLOW + "Toggle AFK", Material.PISTON);
+        (InventoryHolder) null,
+        9,
+        this.title);
+    ItemStack kickItem = this.createButtonItem(ChatColor.RED + "Kick Player", Material.BARRIER);
+    ItemStack alertItem = this.createButtonItem(ChatColor.YELLOW + "Send Alert", Material.PAPER);
+    ItemStack teleportItem = this.createButtonItem(
+        ChatColor.GREEN + "Teleport to Player",
+        Material.COMPASS);
+    ItemStack toggleAFKItem = this.createButtonItem(ChatColor.YELLOW + "Toggle AFK", Material.PISTON);
     inventory.setItem(0, kickItem);
     inventory.setItem(1, alertItem);
     inventory.setItem(2, teleportItem);
@@ -68,79 +63,62 @@ public class AfkPlayerActionsGUI implements Listener {
     Player player = (Player) event.getWhoClicked();
     UUID targetPlayerId = (UUID) targetPlayers.get(player.getUniqueId());
 
-    if (
-      clickedItem == null ||
-      clickedItem.getType() == Material.AIR ||
-      targetPlayerId == null
-    ) {
+    if (clickedItem == null ||
+        clickedItem.getType() == Material.AIR ||
+        targetPlayerId == null) {
       return;
     }
     Player targetPlayer = Bukkit.getPlayer(targetPlayerId);
     if (targetPlayer == null) {
       Text.warn(
-        "Could not find target player, probably the player is offline now"
-      );
+          "Could not find target player, probably the player is offline now");
       return;
     }
 
-    if (
-      clickedItem.getType() == Material.BARRIER &&
-      clickedItem
-        .getItemMeta()
-        .getDisplayName()
-        .equals(ChatColor.RED + "Kick Player")
-    ) {
+    if (clickedItem.getType() == Material.BARRIER &&
+        clickedItem
+            .getItemMeta()
+            .getDisplayName()
+            .equals(ChatColor.RED + "Kick Player")) {
       targetPlayer.kickPlayer(
-        Text.format(
-          "messages.kick",
-          true,
-          true,
-          new Replaceable("player", targetPlayer.getName())
-        )
-      );
+          Text.format(
+              "messages.kick",
+              true,
+              true,
+              new Replaceable("player", targetPlayer.getName())));
       player.sendMessage(
-        ChatColor.GREEN + "Successfully kicked " + targetPlayer.getName()
-      );
+          ChatColor.GREEN + "Successfully kicked " + targetPlayer.getName());
       player.closeInventory();
-    } else if (
-      clickedItem.getType() == Material.PAPER &&
-      clickedItem
-        .getItemMeta()
-        .getDisplayName()
-        .equals(ChatColor.YELLOW + "Send Alert")
-    ) {
+    } else if (clickedItem.getType() == Material.PAPER &&
+        clickedItem
+            .getItemMeta()
+            .getDisplayName()
+            .equals(ChatColor.YELLOW + "Send Alert")) {
       targetPlayer.sendMessage(
-        ChatColor.YELLOW +
-        "You are marked as AFK. Keep active to prevent getting kicked!"
-      );
+          ChatColor.YELLOW +
+              "You are marked as AFK. Keep active to prevent getting kicked!");
       player.sendMessage(
-        ChatColor.GREEN + "Sent alert to " + targetPlayer.getName()
-      );
+          ChatColor.GREEN + "Sent alert to " + targetPlayer.getName());
       player.closeInventory();
-    } else if (
-      clickedItem.getType() == Material.COMPASS &&
-      clickedItem
-        .getItemMeta()
-        .getDisplayName()
-        .equals(ChatColor.GREEN + "Teleport to Player") &&
-      targetPlayer != null
-    ) {
+    } else if (clickedItem.getType() == Material.COMPASS &&
+        clickedItem
+            .getItemMeta()
+            .getDisplayName()
+            .equals(ChatColor.GREEN + "Teleport to Player")
+        &&
+        targetPlayer != null) {
       player.teleport(targetPlayer);
       player.sendMessage(
-        ChatColor.GREEN + "Teleported to " + targetPlayer.getName()
-      );
+          ChatColor.GREEN + "Teleported to " + targetPlayer.getName());
       player.closeInventory();
-    } else if (
-      clickedItem.getType() == Material.PISTON &&
-      clickedItem
-        .getItemMeta()
-        .getDisplayName()
-        .equals(ChatColor.YELLOW + "Toggle AFK")
-    ) {
+    } else if (clickedItem.getType() == Material.PISTON &&
+        clickedItem
+            .getItemMeta()
+            .getDisplayName()
+            .equals(ChatColor.YELLOW + "Toggle AFK")) {
       EasyAFK.instance.afkState.disableAFK(targetPlayer);
       player.sendMessage(
-        ChatColor.GREEN + "Disabled AFK status of " + targetPlayer.getName()
-      );
+          ChatColor.GREEN + "Disabled AFK status of " + targetPlayer.getName());
       player.closeInventory();
     }
   }

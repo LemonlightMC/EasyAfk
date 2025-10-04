@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class InteractionListener implements Listener {
-
   @EventHandler
   public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
     if (event.getEntity() instanceof Player) {

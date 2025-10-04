@@ -20,13 +20,14 @@ public class MoveListener implements Listener {
   private final Map<UUID, Location> lastLocations = new HashMap<>();
   private final Map<UUID, Integer> repeatMoveCount = new HashMap<>();
 
-  public MoveListener() {}
+  public MoveListener() {
+  }
 
   @EventHandler
   public void onMove(PlayerMoveEvent event) {
     Bukkit
-      .getScheduler()
-      .runTaskAsynchronously(EasyAFK.instance, () -> handleMoveEvent(event));
+        .getScheduler()
+        .runTaskAsynchronously(EasyAFK.instance, () -> handleMoveEvent(event));
   }
 
   private void handleMoveEvent(PlayerMoveEvent event) {
@@ -38,10 +39,8 @@ public class MoveListener implements Listener {
     }
 
     DatabaseManager.updateLastActive(playerId, System.currentTimeMillis());
-    if (
-      !EasyAFK.config.disableOnMove ||
-      !EasyAFK.instance.afkState.afkPlayers.contains(playerId)
-    ) {
+    if (!EasyAFK.config.disableOnMove ||
+        !EasyAFK.instance.afkState.afkPlayers.contains(playerId)) {
       return;
     }
     EasyAFK.instance.afkState.disableAFK(player);
@@ -62,10 +61,8 @@ public class MoveListener implements Listener {
     if (EasyAFK.config.antiMicroMove) {
       double dx = Math.abs(lastLoc.x - currLoc.x);
       double dz = Math.abs(lastLoc.z - currLoc.z);
-      if (
-        dx < EasyAFK.config.antiMicroMoveDistance &&
-        dz < EasyAFK.config.antiMicroMoveDistance
-      ) {
+      if (dx < EasyAFK.config.antiMicroMoveDistance &&
+          dz < EasyAFK.config.antiMicroMoveDistance) {
         lastLocations.put(playerId, currLoc.clone());
         return true;
       }
@@ -74,10 +71,8 @@ public class MoveListener implements Listener {
     if (EasyAFK.config.antiRotationOnly) {
       double dYaw = Math.abs(lastLoc.yaw - currLoc.yaw);
       double dPitch = Math.abs(lastLoc.pitch - currLoc.pitch);
-      if (
-        dYaw < EasyAFK.config.antiRotationDistance &&
-        dPitch < EasyAFK.config.antiRotationDistance
-      ) {
+      if (dYaw < EasyAFK.config.antiRotationDistance &&
+          dPitch < EasyAFK.config.antiRotationDistance) {
         lastLocations.put(playerId, currLoc.clone());
         return true;
       }
@@ -95,10 +90,8 @@ public class MoveListener implements Listener {
       int count = repeatMoveCount.getOrDefault(playerId, 0);
       double dx = Math.abs(lastLoc.x - currLoc.x);
       double dz = Math.abs(lastLoc.z - currLoc.z);
-      if (
-        dx < EasyAFK.config.antiMicroMoveDistance &&
-        dz < EasyAFK.config.antiMicroMoveDistance
-      ) {
+      if (dx < EasyAFK.config.antiMicroMoveDistance &&
+          dz < EasyAFK.config.antiMicroMoveDistance) {
         count++;
       } else {
         count = 0;
@@ -116,17 +109,15 @@ public class MoveListener implements Listener {
   private boolean isInInfiniteWaterFlow(Player player) {
     Block block = player.getLocation().getBlock();
     BlockFace[] faces = {
-      BlockFace.NORTH,
-      BlockFace.EAST,
-      BlockFace.SOUTH,
-      BlockFace.WEST,
+        BlockFace.NORTH,
+        BlockFace.EAST,
+        BlockFace.SOUTH,
+        BlockFace.WEST,
     };
     for (BlockFace face : faces) {
       Block adjacentBlock = block.getRelative(face);
-      if (
-        adjacentBlock.getType() == Material.WATER &&
-        adjacentBlock.getRelative(face).getType() == Material.WATER
-      ) {
+      if (adjacentBlock.getType() == Material.WATER &&
+          adjacentBlock.getRelative(face).getType() == Material.WATER) {
         return true;
       }
     }
