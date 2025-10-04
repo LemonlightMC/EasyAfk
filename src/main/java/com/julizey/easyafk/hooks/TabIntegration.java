@@ -21,16 +21,15 @@ public class TabIntegration {
     }
 
     placeholderManager = TabAPI.getInstance().getPlaceholderManager();
-    if (placeholderManager != null) {
-      placeholderManager.registerPlayerPlaceholder(
+    if (placeholderManager == null) {
+      return;
+    }
+    placeholderManager.registerPlayerPlaceholder(
         "%afk%",
         100,
-        player ->
-          EasyAFK.instance.afkState.afkPlayers.contains(player.getUniqueId())
+        player -> EasyAFK.instance.afkState.afkPlayers.contains(player.getUniqueId())
             ? EasyAFK.config.tabPrefix
-            : ""
-      );
-    }
+            : "");
   }
 
   public void unload() {

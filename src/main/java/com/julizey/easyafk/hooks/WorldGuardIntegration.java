@@ -29,20 +29,17 @@ public class WorldGuardIntegration {
       return false;
     }
     final RegionManager regions = platform
-      .getRegionContainer()
-      .get(BukkitAdapter.adapt(player.getWorld()));
+        .getRegionContainer()
+        .get(BukkitAdapter.adapt(player.getWorld()));
 
     if (regions == null) {
       return false;
     }
     final ApplicableRegionSet set = regions.getApplicableRegions(
-      BukkitAdapter.asBlockVector(player.getLocation())
-    );
+        BukkitAdapter.asBlockVector(player.getLocation()));
     for (final ProtectedRegion region : set) {
-      if (
-        !region.getFlags().containsKey(AFK_BYPASS) ||
-        region.getFlag(AFK_BYPASS) != State.ALLOW
-      ) {
+      if (!region.getFlags().containsKey(AFK_BYPASS) ||
+          region.getFlag(AFK_BYPASS) != State.ALLOW) {
         return false;
       }
     }
