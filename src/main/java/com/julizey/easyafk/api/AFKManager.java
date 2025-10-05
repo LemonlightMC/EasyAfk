@@ -1,8 +1,9 @@
 package com.julizey.easyafk.api;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -17,10 +18,14 @@ public class AFKManager {
 
   private int kickTime;
   private int kickTimeIncrease;
-  public HashSet<UUID> afkPlayers = new HashSet<UUID>();
+  public HashMap<UUID, AFKState> states = new HashMap<UUID, AFKState>();
 
   public boolean checkAFK(Player player) {
     return false;
+  }
+
+  public HashMap<UUID, AFKState> getPlayers() {
+    return states;
   }
 
   public void setAFK(Player player, AFKMode mode, boolean isAFK) {
@@ -42,23 +47,16 @@ public class AFKManager {
   }
 
   public boolean isAFK(Player player) {
-    return afkPlayers.contains(player.getUniqueId());
+    return states.containsKey(player.getUniqueId());
   }
 
   public boolean isAFK(UUID uuid) {
-    return afkPlayers.contains(uuid);
-  }
-
-  public void enableAFK(UUID uuid, AFKMode mode) {
-    afkPlayers.add(uuid);
-    if (!DatabaseManager.containsAfkPlayer(uuid)) {
-      DatabaseManager.addAfkPlayer(uuid, mode);
-    }
+    return states.containsKey(uuid);
   }
 
   public void enableAFK(Player player, AFKMode mode) {
     final UUID playerId = player.getUniqueId();
-    afkPlayers.add(playerId);
+    states.put(playerId, new AFKState(mode, System.currentTimeMillis()));
     player.setMetadata(
         "afk",
         new FixedMetadataValue(EasyAFK.instance, mode));
@@ -69,25 +67,19 @@ public class AFKManager {
     AfkEffects.enableAFK(player);
   }
 
-  public void disableAFK(UUID uuid) {
-    afkPlayers.remove(uuid);
-    if (DatabaseManager.containsAfkPlayer(uuid)) {
-      DatabaseManager.removeAfkPlayer(uuid);
-    }
-  }
-
   public void disableAFK(Player player) {
     final UUID playerId = player.getUniqueId();
-    afkPlayers.remove(playerId);
+    AFKState state = states.get(playerId);
+    states.remove(playerId);
+
     player.setMetadata(
         "afk",
         new FixedMetadataValue(EasyAFK.instance, Boolean.FALSE));
-
     if (DatabaseManager.containsAfkPlayer(playerId)) {
       DatabaseManager.removeAfkPlayer(playerId);
     }
-
-    AfkEffects.disableAFK(player);
+    Bukkit.getPluginManager().callEvent(new AFKStopEvent(player, state));
+    AfkEffects.disableAFK(player, state);
   }
 
   public void setAfkKickTime(int seconds) {

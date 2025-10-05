@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.julizey.easyafk.EasyAFK;
+import com.julizey.easyafk.api.AFKState;
 import com.julizey.easyafk.utils.Text.Replaceable;
 
 public class AfkEffects {
@@ -33,7 +34,7 @@ public class AfkEffects {
     EasyAFK.instance.animationManager.play(player, "enable");
   }
 
-  public static void disableAFK(final Player player) {
+  public static void disableAFK(final Player player, AFKState state) {
     Text.send(player, "messages.unafk");
 
     if (EasyAFK.config.unafkBroadcastEnabled) {
