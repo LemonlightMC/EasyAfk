@@ -1,5 +1,6 @@
 package com.julizey.easyafk;
 
+import com.julizey.easyafk.api.AFKManager;
 import com.julizey.easyafk.database.DatabaseManager;
 import com.julizey.easyafk.event.MoveListener;
 import com.julizey.easyafk.event.PlayerQuitListener;
@@ -7,7 +8,6 @@ import com.julizey.easyafk.gui.AfkPlayerActionsGUI;
 import com.julizey.easyafk.gui.AfkPlayerOverviewGUI;
 import com.julizey.easyafk.hooks.TabIntegration;
 import com.julizey.easyafk.hooks.WorldGuardIntegration;
-import com.julizey.easyafk.state.AfkState;
 import com.julizey.easyafk.utils.AnimationManager;
 import com.julizey.easyafk.utils.Config;
 import com.julizey.easyafk.utils.Text;
@@ -25,7 +25,7 @@ public class EasyAFK extends JavaPlugin {
   public AfkPlayerActionsGUI afkPlayerActionsGUI;
   public AnimationManager animationManager;
   public AfkCheckTask afkChecker;
-  public AfkState afkState;
+  public AFKManager manager;
 
   public void onLoad() {
     instance = this;
@@ -35,7 +35,7 @@ public class EasyAFK extends JavaPlugin {
   }
 
   public void onEnable() {
-    afkState = new AfkState();
+    manager = new AFKManager();
     afkChecker = new AfkCheckTask();
     animationManager = new AnimationManager(config.configFile, "effects");
     afkPlayerOverviewGUI = new AfkPlayerOverviewGUI();

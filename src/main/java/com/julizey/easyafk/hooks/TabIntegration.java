@@ -27,7 +27,7 @@ public class TabIntegration {
     placeholderManager.registerPlayerPlaceholder(
         "%afk%",
         100,
-        player -> EasyAFK.instance.afkState.afkPlayers.contains(player.getUniqueId())
+        player -> EasyAFK.instance.manager.isAFK(player.getUniqueId())
             ? EasyAFK.config.tabPrefix
             : "");
   }

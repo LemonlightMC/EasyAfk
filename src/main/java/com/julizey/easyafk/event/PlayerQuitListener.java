@@ -1,6 +1,7 @@
 package com.julizey.easyafk.event;
 
 import com.julizey.easyafk.EasyAFK;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,8 +15,8 @@ public class PlayerQuitListener implements Listener {
       return;
     }
     Player player = event.getPlayer();
-    if (EasyAFK.instance.afkState.afkPlayers.contains(player.getUniqueId())) {
-      EasyAFK.instance.afkState.afkPlayers.remove(player.getUniqueId());
+    if (EasyAFK.instance.manager.isAFK(player)) {
+      EasyAFK.instance.manager.disableAFK(player);
     }
   }
 }

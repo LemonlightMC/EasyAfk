@@ -1,7 +1,7 @@
 package com.julizey.easyafk.database;
 
 import com.julizey.easyafk.EasyAFK;
-import com.julizey.easyafk.utils.AfkMode;
+import com.julizey.easyafk.api.AFKState.AFKMode;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,7 +15,7 @@ public class DatabaseManager {
 
     boolean isConnected();
 
-    void addAfkPlayer(UUID playerId, AfkMode mode, long lastActive);
+    void addAfkPlayer(UUID playerId, AFKMode mode, long lastActive);
 
     void removeAfkPlayer(UUID playerId);
 
@@ -65,7 +65,7 @@ public class DatabaseManager {
     return provider != null && provider.isConnected();
   }
 
-  public static void addAfkPlayer(final UUID playerId, AfkMode mode, final long lastActive) {
+  public static void addAfkPlayer(final UUID playerId, AFKMode mode, final long lastActive) {
     if (playerId == null)
       return;
     lastActiveCache.put(playerId, lastActive);
@@ -75,7 +75,7 @@ public class DatabaseManager {
     }
   }
 
-  public static void addAfkPlayer(final UUID playerId, AfkMode mode) {
+  public static void addAfkPlayer(final UUID playerId, AFKMode mode) {
     if (playerId == null)
       return;
     final long time = System.currentTimeMillis();

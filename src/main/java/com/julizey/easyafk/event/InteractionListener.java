@@ -13,7 +13,7 @@ public class InteractionListener implements Listener {
   public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
     if (event.getEntity() instanceof Player) {
       Player player = (Player) event.getEntity();
-      if (EasyAFK.instance.afkState.isAfk(player)) {
+      if (EasyAFK.instance.manager.isAFK(player)) {
         event.setCancelled(true); // Cancel damage if the player is AFK
       }
     }
@@ -23,7 +23,7 @@ public class InteractionListener implements Listener {
   @EventHandler
   public void onPlayerMove(PlayerMoveEvent event) {
     Player player = event.getPlayer();
-    if (EasyAFK.instance.afkState.isAfk(player)) {
+    if (EasyAFK.instance.manager.isAFK(player)) {
       // Cancel movement if the player is AFK and attempting to move
       event.setCancelled(true);
     }
@@ -33,7 +33,7 @@ public class InteractionListener implements Listener {
   @EventHandler
   public void onPlayerInteract(PlayerInteractEvent event) {
     Player player = event.getPlayer();
-    if (EasyAFK.instance.afkState.isAfk(player)) {
+    if (EasyAFK.instance.manager.isAFK(player)) {
       event.setCancelled(true); // Cancel interaction if the player is AFK
     }
   }

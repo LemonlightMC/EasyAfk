@@ -27,7 +27,7 @@ public class AfkPlayerOverviewGUI implements Listener {
 
   public void openGUI(Player player, int page) {
     List<UUID> afkPlayers = new java.util.ArrayList<>(
-        EasyAFK.instance.afkState.afkPlayers);
+        EasyAFK.instance.manager.afkPlayers);
     int pageSize = 45;
     int totalPages = (int) Math.ceil(
         (double) afkPlayers.size() / (double) pageSize);

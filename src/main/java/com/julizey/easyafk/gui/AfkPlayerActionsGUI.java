@@ -116,7 +116,7 @@ public class AfkPlayerActionsGUI implements Listener {
             .getItemMeta()
             .getDisplayName()
             .equals(ChatColor.YELLOW + "Toggle AFK")) {
-      EasyAFK.instance.afkState.disableAFK(targetPlayer);
+      EasyAFK.instance.manager.disableAFK(targetPlayer);
       player.sendMessage(
           ChatColor.GREEN + "Disabled AFK status of " + targetPlayer.getName());
       player.closeInventory();
