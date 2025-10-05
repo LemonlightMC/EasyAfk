@@ -40,7 +40,7 @@ public class MoveListener implements Listener {
 
     DatabaseManager.updateLastActive(playerId, System.currentTimeMillis());
     if (!EasyAFK.config.disableOnMove ||
-        !EasyAFK.instance.manager.afkPlayers.contains(playerId)) {
+        !EasyAFK.instance.manager.isAFK(playerId)) {
       return;
     }
     EasyAFK.instance.manager.disableAFK(player);

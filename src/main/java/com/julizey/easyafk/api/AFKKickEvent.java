@@ -21,20 +21,17 @@ public class AFKKickEvent extends Event {
     return HANDLERS;
   }
 
-  public AFKKickEvent(final Player player, final long time, final String reason) {
+  public AFKKickEvent(Player player, AFKState state) {
     super(true);
     if (player == null) {
       throw new IllegalArgumentException("Invalid Player");
     }
-    if (time <= 0) {
-      throw new IllegalArgumentException("Invalid Time");
-    }
-    if (reason == null || reason.length() == 0) {
-      throw new IllegalArgumentException("Invalid Reason");
+    if (state == null) {
+      throw new IllegalArgumentException("Invalid State");
     }
     this.player = player;
-    this.duration = System.currentTimeMillis() - time;
-    this.reason = reason;
+    this.duration = System.currentTimeMillis() - state.getLastActive();
+    this.reason = "";
   }
 
   public Player getPlayer() {

@@ -40,12 +40,12 @@ public class AfkCheckTask extends BukkitRunnable {
               EasyAFK.config.kickEnabledWhenFull &&
                   Bukkit.getOnlinePlayers().size() == Bukkit.getMaxPlayers())
           &&
-          EasyAFK.instance.manager.afkPlayers.contains(player.getUniqueId())) {
+          EasyAFK.instance.manager.isAFK(player.getUniqueId())) {
         Bukkit
             .getScheduler()
             .runTask(EasyAFK.instance, () -> kickPlayer(player));
       } else if (currentTime - lastActive > EasyAFK.config.afkTimeout &&
-          !EasyAFK.instance.manager.afkPlayers.contains(player.getUniqueId())) {
+          !EasyAFK.instance.manager.isAFK(player.getUniqueId())) {
         EasyAFK.instance.manager.toggleAFK(player, AFKMode.SOFT);
       }
     }
@@ -63,7 +63,7 @@ public class AfkCheckTask extends BukkitRunnable {
             true,
             new Replaceable("%player%", player.getName())));
     if (EasyAFK.config.disableOnKick) {
-      EasyAFK.instance.manager.afkPlayers.remove(player.getUniqueId());
+      EasyAFK.instance.manager.disableAFK(player);
     }
     DatabaseManager.updateLastActive(player.getUniqueId(), -1);
   }
