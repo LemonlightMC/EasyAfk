@@ -1,12 +1,14 @@
 package com.julizey.easyafk.database;
 
 import com.julizey.easyafk.EasyAFK;
+import com.julizey.easyafk.utils.AfkMode;
 import com.julizey.easyafk.utils.Text;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.UUID;
 
 public class MySQLManager implements DatabaseManager.DatabaseProvider {
@@ -16,6 +18,7 @@ public class MySQLManager implements DatabaseManager.DatabaseProvider {
   public MySQLManager() {
     try {
       openConnection();
+      createTableIfNotExists();
     } catch (final SQLException ex) {
       Text.warn("Could not connect to MySQL server!");
       ex.printStackTrace();
@@ -31,28 +34,27 @@ public class MySQLManager implements DatabaseManager.DatabaseProvider {
     }
   }
 
-  public void addAfkPlayer(final UUID playerId, final long lastActive) {
+  public void addAfkPlayer(final UUID playerId, AfkMode mode, final long lastActive) {
     try {
       final PreparedStatement selectStatement = connection.prepareStatement(
-        "SELECT COUNT(*) FROM afk_players WHERE player_id = ?"
-      );
+          "SELECT COUNT(*) FROM afk_players WHERE player_id = ?");
       selectStatement.setString(1, playerId.toString());
       final ResultSet resultSet = selectStatement.executeQuery();
       String insertQuery;
       PreparedStatement insertStatement;
       if (resultSet.next() && resultSet.getInt(1) > 0) {
-        insertQuery =
-          "UPDATE afk_players SET last_active = ? WHERE player_id = ?";
+        insertQuery = "UPDATE afk_players SET last_active = ?, mode = ? WHERE player_id = ?";
         insertStatement = connection.prepareStatement(insertQuery);
         insertStatement.setLong(1, lastActive);
-        insertStatement.setString(2, playerId.toString());
+        insertStatement.setBoolean(2, mode.toBool());
+        insertStatement.setString(3, playerId.toString());
         insertStatement.executeUpdate();
       } else {
-        insertQuery =
-          "INSERT INTO afk_players (player_id, last_active) VALUES (?, ?)";
+        insertQuery = "INSERT INTO afk_players (player_id, mode, last_active) VALUES (?, ?, ?)";
         insertStatement = connection.prepareStatement(insertQuery);
         insertStatement.setString(1, playerId.toString());
-        insertStatement.setLong(2, lastActive);
+        insertStatement.setBoolean(2, mode.toBool());
+        insertStatement.setLong(3, lastActive);
         insertStatement.executeUpdate();
       }
     } catch (final SQLException ex) {
@@ -67,8 +69,7 @@ public class MySQLManager implements DatabaseManager.DatabaseProvider {
     }
     try {
       final PreparedStatement statement = connection.prepareStatement(
-        "DELETE FROM afk_players WHERE player_id = ?"
-      );
+          "DELETE FROM afk_players WHERE player_id = ?");
       statement.setString(1, playerId.toString());
       statement.executeUpdate();
     } catch (final SQLException ex) {
@@ -80,8 +81,7 @@ public class MySQLManager implements DatabaseManager.DatabaseProvider {
   public boolean containsAfkPlayer(final UUID playerId) {
     try {
       final PreparedStatement statement = connection.prepareStatement(
-        "SELECT 1 FROM afk_players WHERE player_id = ?"
-      );
+          "SELECT 1 FROM afk_players WHERE player_id = ?");
       statement.setString(1, playerId.toString());
       final ResultSet resultSet = statement.executeQuery();
       return resultSet.next();
@@ -95,10 +95,8 @@ public class MySQLManager implements DatabaseManager.DatabaseProvider {
 
   public void removeAllAfkPlayers() {
     try (
-      PreparedStatement ps = connection.prepareStatement(
-        "DELETE FROM afk_players"
-      )
-    ) {
+        PreparedStatement ps = connection.prepareStatement(
+            "DELETE FROM afk_players")) {
       ps.executeUpdate();
     } catch (final SQLException ex) {
       ex.printStackTrace();
@@ -125,17 +123,26 @@ public class MySQLManager implements DatabaseManager.DatabaseProvider {
       if (connection != null && !connection.isClosed()) {
         return;
       }
-      connection =
-        DriverManager.getConnection(
+      connection = DriverManager.getConnection(
           "jdbc:mysql://" +
-          EasyAFK.config.host +
-          ":" +
-          EasyAFK.config.port +
-          "/" +
-          EasyAFK.config.database,
+              EasyAFK.config.host +
+              ":" +
+              EasyAFK.config.port +
+              "/" +
+              EasyAFK.config.database,
           EasyAFK.config.username,
-          EasyAFK.config.password
-        );
+          EasyAFK.config.password);
     }
+  }
+
+  private void createTableIfNotExists() throws SQLException {
+    final String createTableSQL = "CREATE TABLE IF NOT EXISTS afk_players (" +
+        "player_id TEXT PRIMARY KEY," +
+        "mode BOOLEAN," +
+        "last_active INTEGER" +
+        ")";
+    final Statement stmt = connection.createStatement();
+    stmt.execute(createTableSQL);
+    stmt.close();
   }
 }
