@@ -1,4 +1,4 @@
-package com.julizey.easyafk.event;
+package com.julizey.easyafk.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

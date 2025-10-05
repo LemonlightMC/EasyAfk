@@ -1,15 +1,14 @@
-package com.julizey.easyafk.event;
+package com.julizey.easyafk.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class AFKKickEvent extends Event {
+public class AFKStopEvent extends Event {
 
   private final Player player;
   private final long duration;
   private final String reason;
-
   private static final HandlerList HANDLERS = new HandlerList();
 
   public static HandlerList getHandlerList() {
@@ -21,7 +20,7 @@ public class AFKKickEvent extends Event {
     return HANDLERS;
   }
 
-  public AFKKickEvent(final Player player, final long time, final String reason) {
+  public AFKStopEvent(Player player, long time, final String reason) {
     super(true);
     if (player == null) {
       throw new IllegalArgumentException("Invalid Player");
@@ -64,7 +63,7 @@ public class AFKKickEvent extends Event {
     if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
-    final AFKKickEvent other = (AFKKickEvent) obj;
+    final AFKStopEvent other = (AFKStopEvent) obj;
     if (player == null && other.player != null || reason == null && other.reason != null) {
       return false;
     }
@@ -73,7 +72,6 @@ public class AFKKickEvent extends Event {
 
   @Override
   public String toString() {
-    return "AFKKickEvent [player=" + player + ", duration=" + duration + ", reason=" + reason + "]";
+    return "AFKStopEvent [player=" + player + ", duration=" + duration + ", reason=" + reason + "]";
   }
-
 }
