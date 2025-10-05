@@ -108,7 +108,7 @@ public class Config {
     antiBlockBreak = configFile.getBoolean("anti.block-break", false);
     antiBlockPlace = configFile.getBoolean("anti.block-place", false);
 
-    antiMicroMove = configFile.getBoolean("microMove", false);
+    antiMicroMove = configFile.getBoolean("anti.microMove", false);
     antiMicroMoveDistance = configFile.getDouble("anti.microMoveDistance", 0.3F);
     antiRotationOnly = configFile.getBoolean("anti.rotationOnly", false);
     antiRotationDistance = configFile.getDouble("anti.rotationDistance", 10.0F);
