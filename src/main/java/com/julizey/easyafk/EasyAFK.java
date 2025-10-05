@@ -12,6 +12,7 @@ import com.julizey.easyafk.utils.AnimationManager;
 import com.julizey.easyafk.utils.Config;
 import com.julizey.easyafk.utils.Text;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class EasyAFK extends JavaPlugin {
@@ -21,8 +22,9 @@ public class EasyAFK extends JavaPlugin {
 
   public TabIntegration tabIntegration = null;
   public WorldGuardIntegration worldGuardIntegration = null;
-  public AfkPlayerOverviewGUI afkPlayerOverviewGUI;
-  public AfkPlayerActionsGUI afkPlayerActionsGUI;
+  private AfkPlayerOverviewGUI afkPlayerOverviewGUI;
+  private AfkPlayerActionsGUI afkPlayerActionsGUI;
+  private boolean hasRegisteredGUIs = false;
   public AnimationManager animationManager;
   public AfkCheckTask afkChecker;
   public AFKManager manager;
@@ -38,16 +40,12 @@ public class EasyAFK extends JavaPlugin {
     manager = new AFKManager();
     afkChecker = new AfkCheckTask();
     animationManager = new AnimationManager(config.configFile, "effects");
-    afkPlayerOverviewGUI = new AfkPlayerOverviewGUI();
-    afkPlayerActionsGUI = new AfkPlayerActionsGUI();
 
     // Events
     getServer().getPluginManager().registerEvents(new MoveListener(), this);
     getServer()
         .getPluginManager()
         .registerEvents(new PlayerQuitListener(), this);
-    getServer().getPluginManager().registerEvents(afkPlayerOverviewGUI, this);
-    getServer().getPluginManager().registerEvents(afkPlayerActionsGUI, this);
 
     // Command
     EasyAFKCommand afkCommand = new EasyAFKCommand();
@@ -114,5 +112,27 @@ public class EasyAFK extends JavaPlugin {
       Text.warn("Failed to reload the configs!");
       ex.printStackTrace();
     }
+  }
+
+  public void openOverviewGUI(Player p) {
+    if (!hasRegisteredGUIs) {
+      hasRegisteredGUIs = true;
+      afkPlayerOverviewGUI = new AfkPlayerOverviewGUI();
+      afkPlayerActionsGUI = new AfkPlayerActionsGUI();
+      getServer().getPluginManager().registerEvents(afkPlayerOverviewGUI, this);
+      getServer().getPluginManager().registerEvents(afkPlayerActionsGUI, this);
+    }
+    afkPlayerOverviewGUI.openGUI(p, 1);
+  }
+
+  public void openActionGUI(Player p, Player target) {
+    if (!hasRegisteredGUIs) {
+      hasRegisteredGUIs = true;
+      afkPlayerOverviewGUI = new AfkPlayerOverviewGUI();
+      afkPlayerActionsGUI = new AfkPlayerActionsGUI();
+      getServer().getPluginManager().registerEvents(afkPlayerOverviewGUI, this);
+      getServer().getPluginManager().registerEvents(afkPlayerActionsGUI, this);
+    }
+    afkPlayerActionsGUI.openGUI(p, target);
   }
 }

@@ -9,7 +9,6 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -40,17 +39,17 @@ public class EasyAFKCommand implements TabExecutor {
   }
 
   private void handleCommand(CommandSender sender, String[] args) {
-    if (!checkPermission(sender, "easyafk.use")) {
+    if (!(sender instanceof Player)) {
+      Text.send(sender, "messages.command-onlyPlayers");
       return;
     }
-    if (!handleCooldown(sender)) {
+    if (checkPermission(sender, "easyafk.use")) {
+      return;
+    }
+    if (handleCooldown(sender)) {
       return;
     }
     if (args.length == 0) {
-      if (!(sender instanceof Player)) {
-        Text.send(sender, "messages.command-onlyPlayers");
-        return;
-      }
       EasyAFK.instance.manager.toggleAFK((Player) sender, AFKMode.HARD);
       return;
     }
@@ -60,10 +59,6 @@ public class EasyAFKCommand implements TabExecutor {
         sendHelp(sender);
       }
       case "status" -> {
-        if (!(sender instanceof Player)) {
-          Text.send(sender, "messages.command-onlyPlayers");
-          return;
-        }
         Text.send(
             sender,
             "messages.command-status",
@@ -74,30 +69,18 @@ public class EasyAFKCommand implements TabExecutor {
                     : "disabled"));
       }
       case "toggle" -> {
-        if (!(sender instanceof Player)) {
-          Text.send(sender, "messages.command-onlyPlayers");
-          return;
-        }
         Player p = getTarget((Player) sender, args);
         if (p == null)
           return;
         EasyAFK.instance.manager.toggleAFK(p, AFKMode.HARD);
       }
       case "enable" -> {
-        if (!(sender instanceof Player)) {
-          Text.send(sender, "messages.command-onlyPlayers");
-          return;
-        }
         Player p = getTarget((Player) sender, args);
         if (p == null)
           return;
         EasyAFK.instance.manager.enableAFK(p, null);
       }
       case "disable" -> {
-        if (!(sender instanceof Player)) {
-          Text.send(sender, "messages.command-onlyPlayers");
-          return;
-        }
         Player p = getTarget((Player) sender, args);
         if (p == null)
           return;
@@ -109,16 +92,9 @@ public class EasyAFKCommand implements TabExecutor {
         }
         EasyAFK.instance.reload(true);
         Text.send(sender, "Config reloaded.");
-        if (!(sender instanceof ConsoleCommandSender)) {
-          Text.info("Config reloaded.");
-        }
       }
       case "gui" -> {
         if (!checkPermission(sender, "easyafk.admin")) {
-          return;
-        }
-        if (!(sender instanceof Player)) {
-          Text.send(sender, "messages.command-onlyPlayers");
           return;
         }
         Bukkit
@@ -126,7 +102,7 @@ public class EasyAFKCommand implements TabExecutor {
             .runTask(
                 EasyAFK.instance,
                 () -> {
-                  EasyAFK.instance.afkPlayerOverviewGUI.openGUI((Player) sender, 1);
+                  EasyAFK.instance.openOverviewGUI((Player) sender);
                 });
       }
       default -> {
@@ -138,10 +114,10 @@ public class EasyAFKCommand implements TabExecutor {
   private static boolean checkPermission(
       CommandSender sender,
       String permission) {
-    if (!sender.hasPermission(permission)) {
-      Text.send(sender, "messages.command-noPermission");
+    if (sender.hasPermission(permission)) {
       return false;
     }
+    Text.send(sender, "messages.command-noPermission");
     return true;
   }
 

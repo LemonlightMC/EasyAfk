@@ -105,7 +105,7 @@ public class AfkPlayerOverviewGUI implements Listener {
     if (clickedItem.getType() == Material.PLAYER_HEAD) {
       String playerName = ChatColor.stripColor(
           clickedItem.getItemMeta().getDisplayName());
-      EasyAFK.instance.afkPlayerActionsGUI.openGUI(
+      EasyAFK.instance.openActionGUI(
           player,
           Bukkit.getPlayer(playerName));
     } else if (clickedItem.getType() == Material.ARROW) {
