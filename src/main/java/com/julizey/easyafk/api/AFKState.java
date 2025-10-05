@@ -12,7 +12,7 @@ public class AFKState {
       return this.equals(HARD);
     }
 
-    public static AFKMode fromBool(boolean value) {
+    public static AFKMode fromBool(final boolean value) {
       return value ? HARD : SOFT;
     }
   }
@@ -20,8 +20,48 @@ public class AFKState {
   private AFKMode mode;
   private long last_active;
 
-  public AFKState(AFKMode mode, long last_active) {
+  public AFKState(final AFKMode mode, final long last_active) {
     this.mode = mode;
     this.last_active = last_active;
   }
+
+  public void setLastActive(final long last_active) {
+    this.last_active = last_active;
+  }
+
+  public long getLastActive() {
+    return last_active;
+  }
+
+  public void setMode(final AFKMode mode) {
+    this.mode = mode;
+  }
+
+  public AFKMode getMode() {
+    return mode;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = 31 + ((mode == null) ? 0 : mode.hashCode());
+    return 31 * result + (int) (last_active ^ (last_active >>> 32));
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    AFKState other = (AFKState) obj;
+    return mode == other.mode && last_active == other.last_active;
+  }
+
+  @Override
+  public String toString() {
+    return "AFKState [mode=" + mode + ", last_active=" + last_active + "]";
+  }
+
 }
