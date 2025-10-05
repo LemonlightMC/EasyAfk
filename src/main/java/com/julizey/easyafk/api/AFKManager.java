@@ -1,3 +1,136 @@
 package com.julizey.easyafk.api;
 
-public class AFKManager {}
+import java.util.HashSet;
+import java.util.UUID;
+
+import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
+
+import com.julizey.easyafk.EasyAFK;
+import com.julizey.easyafk.api.AFKState.AFKMode;
+import com.julizey.easyafk.database.DatabaseManager;
+import com.julizey.easyafk.hooks.TabIntegration;
+import com.julizey.easyafk.hooks.WorldGuardIntegration;
+import com.julizey.easyafk.utils.AfkEffects;
+
+public class AFKManager {
+
+  private int kickTime;
+  private int kickTimeIncrease;
+  public HashSet<UUID> afkPlayers = new HashSet<UUID>();
+
+  public boolean checkAFK(Player player) {
+    return false;
+  }
+
+  public void setAFK(Player player, AFKMode mode, boolean isAFK) {
+    boolean current = isAFK(player);
+    if (isAFK && !current) {
+      enableAFK(player, mode);
+    } else if (!isAFK && current) {
+      disableAFK(player);
+    }
+  }
+
+  public void toggleAFK(Player player, AFKMode mode) {
+    boolean current = isAFK(player);
+    if (current) {
+      disableAFK(player);
+    } else {
+      enableAFK(player, mode);
+    }
+  }
+
+  public boolean isAFK(Player player) {
+    return afkPlayers.contains(player.getUniqueId());
+  }
+
+  public boolean isAFK(UUID uuid) {
+    return afkPlayers.contains(uuid);
+  }
+
+  public void enableAFK(UUID uuid, AFKMode mode) {
+    afkPlayers.add(uuid);
+    if (!DatabaseManager.containsAfkPlayer(uuid)) {
+      DatabaseManager.addAfkPlayer(uuid, mode);
+    }
+  }
+
+  public void enableAFK(Player player, AFKMode mode) {
+    final UUID playerId = player.getUniqueId();
+    afkPlayers.add(playerId);
+    player.setMetadata(
+        "afk",
+        new FixedMetadataValue(EasyAFK.instance, mode));
+    if (!DatabaseManager.containsAfkPlayer(playerId)) {
+      DatabaseManager.addAfkPlayer(playerId, mode);
+    }
+
+    AfkEffects.enableAFK(player);
+  }
+
+  public void disableAFK(UUID uuid) {
+    afkPlayers.remove(uuid);
+    if (DatabaseManager.containsAfkPlayer(uuid)) {
+      DatabaseManager.removeAfkPlayer(uuid);
+    }
+  }
+
+  public void disableAFK(Player player) {
+    final UUID playerId = player.getUniqueId();
+    afkPlayers.remove(playerId);
+    player.setMetadata(
+        "afk",
+        new FixedMetadataValue(EasyAFK.instance, Boolean.FALSE));
+
+    if (DatabaseManager.containsAfkPlayer(playerId)) {
+      DatabaseManager.removeAfkPlayer(playerId);
+    }
+
+    AfkEffects.disableAFK(player);
+  }
+
+  public void setAfkKickTime(int seconds) {
+    this.kickTime = seconds;
+    this.kickTimeIncrease = 0;
+  }
+
+  public void setAfkKickTime(int seconds, int increase) {
+    this.kickTime = seconds;
+    this.kickTimeIncrease = increase;
+  }
+
+  public void enableTabCompatIntegration() {
+    if (EasyAFK.instance.tabIntegration == null) {
+      EasyAFK.instance.tabIntegration = new TabIntegration();
+    }
+  }
+
+  public void disableTabCompatIntegration() {
+    if (EasyAFK.instance.tabIntegration != null) {
+      EasyAFK.instance.tabIntegration.unload();
+      EasyAFK.instance.tabIntegration = null;
+    }
+  }
+
+  public boolean hasTabIntegration() {
+    return EasyAFK.instance.tabIntegration != null;
+  }
+
+  public void disableWorldGuardCompatIntegration() {
+    if (EasyAFK.instance.worldGuardIntegration != null) {
+      EasyAFK.instance.worldGuardIntegration.unload();
+      EasyAFK.instance.worldGuardIntegration = null;
+    }
+  }
+
+  public void enableWorldGuardIntegration() {
+    if (EasyAFK.instance.worldGuardIntegration == null) {
+      EasyAFK.instance.worldGuardIntegration = new WorldGuardIntegration();
+    }
+  }
+
+  public boolean hasWorldGuardIntegration() {
+    return EasyAFK.instance.worldGuardIntegration != null;
+  }
+}
