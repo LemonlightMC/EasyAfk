@@ -18,9 +18,12 @@ import com.julizey.easyafk.utils.Text.Replaceable;
 
 public class AFKManager {
 
-  private int kickTime;
-  private int kickTimeIncrease;
-  public HashMap<UUID, AFKState> states = new HashMap<UUID, AFKState>();
+  public long kickTime;
+  public long kickTimeIncrease;
+  public long afkTime;
+  public long afkTimeIncrease;
+  public String tabPrefix;
+  private HashMap<UUID, AFKState> states = new HashMap<UUID, AFKState>();
 
   public HashMap<UUID, AFKState> getPlayers() {
     return states;
@@ -117,14 +120,48 @@ public class AFKManager {
             new Replaceable("%player%", p.getName())));
   }
 
-  public void setAfkKickTime(final int seconds) {
+  public void setAfkTime(final long seconds) {
+    this.afkTime = seconds;
+    this.afkTimeIncrease = 0;
+  }
+
+  public void setAfkTime(final long seconds, final long increase) {
+    this.afkTime = seconds;
+    this.afkTimeIncrease = increase;
+  }
+
+  public long getAfkTime() {
+    return afkTime;
+  }
+
+  public long getAfkTimeIncrease() {
+    return afkTimeIncrease;
+  }
+
+  public void setKickTime(final long seconds) {
     this.kickTime = seconds;
     this.kickTimeIncrease = 0;
   }
 
-  public void setAfkKickTime(final int seconds, final int increase) {
+  public void setKickTime(final long seconds, final long increase) {
     this.kickTime = seconds;
     this.kickTimeIncrease = increase;
+  }
+
+  public long getKickTime() {
+    return kickTime;
+  }
+
+  public long getKickTimeIncrease() {
+    return kickTimeIncrease;
+  }
+
+  public String getTabPrefix() {
+    return tabPrefix;
+  }
+
+  public void setTabPrefix(String tabPrefix) {
+    this.tabPrefix = Text.convertColor(tabPrefix);
   }
 
   public void enableTabCompatIntegration() {
