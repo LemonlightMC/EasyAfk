@@ -26,8 +26,8 @@ public class AFKManager {
     return states;
   }
 
-  public void setAFK(Player player, AFKMode mode, boolean isAFK) {
-    boolean current = isAFK(player);
+  public void setAFK(final Player player, final AFKMode mode, final boolean isAFK) {
+    final boolean current = isAFK(player);
     if (isAFK && !current) {
       enableAFK(player, mode);
     } else if (!isAFK && current) {
@@ -35,8 +35,8 @@ public class AFKManager {
     }
   }
 
-  public void toggleAFK(Player player, AFKMode mode) {
-    boolean current = isAFK(player);
+  public void toggleAFK(final Player player, final AFKMode mode) {
+    final boolean current = isAFK(player);
     if (current) {
       disableAFK(player);
     } else {
@@ -44,15 +44,25 @@ public class AFKManager {
     }
   }
 
-  public boolean isAFK(Player player) {
+  public boolean isAFK(final Player player, final AFKMode mode) {
+    final AFKState state = states.get(player.getUniqueId());
+    return state != null && state.getMode().equals(mode);
+  }
+
+  public boolean isAFK(final UUID uuid, final AFKMode mode) {
+    final AFKState state = states.get(uuid);
+    return state != null && state.getMode().equals(mode);
+  }
+
+  public boolean isAFK(final Player player) {
     return states.containsKey(player.getUniqueId());
   }
 
-  public boolean isAFK(UUID uuid) {
+  public boolean isAFK(final UUID uuid) {
     return states.containsKey(uuid);
   }
 
-  public void enableAFK(Player player, AFKMode mode) {
+  public void enableAFK(final Player player, final AFKMode mode) {
     final UUID playerId = player.getUniqueId();
     states.put(playerId, new AFKState(mode, System.currentTimeMillis()));
     player.setMetadata(
@@ -65,9 +75,9 @@ public class AFKManager {
     AfkEffects.enableAFK(player);
   }
 
-  public void disableAFK(Player player) {
+  public void disableAFK(final Player player) {
     final UUID playerId = player.getUniqueId();
-    AFKState state = states.get(playerId);
+    final AFKState state = states.get(playerId);
     states.remove(playerId);
 
     player.setMetadata(
@@ -80,12 +90,12 @@ public class AFKManager {
     AfkEffects.disableAFK(player, state);
   }
 
-  public void kickPlayer(Player p) {
+  public void kickPlayer(final Player p) {
     if (EasyAFK.config.bypassKickEnabled && p.hasPermission("easyafk.bypass.kick")) {
       return;
     }
     final UUID playerId = p.getUniqueId();
-    AFKState state = states.get(playerId);
+    final AFKState state = states.get(playerId);
     states.remove(playerId);
 
     if (EasyAFK.config.disableOnKick) {
@@ -107,12 +117,12 @@ public class AFKManager {
             new Replaceable("%player%", p.getName())));
   }
 
-  public void setAfkKickTime(int seconds) {
+  public void setAfkKickTime(final int seconds) {
     this.kickTime = seconds;
     this.kickTimeIncrease = 0;
   }
 
-  public void setAfkKickTime(int seconds, int increase) {
+  public void setAfkKickTime(final int seconds, final int increase) {
     this.kickTime = seconds;
     this.kickTimeIncrease = increase;
   }
