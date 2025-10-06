@@ -2,8 +2,6 @@ package com.julizey.easyafk;
 
 import com.julizey.easyafk.api.AFKState.AFKMode;
 import com.julizey.easyafk.database.DatabaseManager;
-import com.julizey.easyafk.utils.Text;
-import com.julizey.easyafk.utils.Text.Replaceable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -12,17 +10,11 @@ public class AfkCheckTask extends BukkitRunnable {
 
   public void run() {
     final long currentTime = System.currentTimeMillis();
+    final boolean isFull = EasyAFK.config.kickEnabledWhenFull &&
+        Bukkit.getOnlinePlayers().size() == Bukkit.getMaxPlayers();
 
     for (final Player player : Bukkit.getOnlinePlayers()) {
-      if (EasyAFK.config.bypassAfkEnabled &&
-          player.hasPermission("easyafk.bypass.afk")) {
-        continue;
-      }
-      if (EasyAFK.config.ignoredWorlds.contains(player.getWorld().getName())) {
-        continue;
-      }
-      if (EasyAFK.instance.worldGuardIntegration != null &&
-          EasyAFK.instance.worldGuardIntegration.isInAfkBypassSection(player)) {
+      if (canBypass(player)) {
         continue;
       }
 
@@ -32,39 +24,23 @@ public class AfkCheckTask extends BukkitRunnable {
         DatabaseManager.updateLastActive(player.getUniqueId(), currentTime);
         continue;
       }
-      if (currentTime -
-          lastActive > EasyAFK.config.kickTimeout +
-              EasyAFK.config.afkTimeout
-          &&
-          (EasyAFK.config.kickEnabled ||
-              EasyAFK.config.kickEnabledWhenFull &&
-                  Bukkit.getOnlinePlayers().size() == Bukkit.getMaxPlayers())
-          &&
-          EasyAFK.instance.manager.isAFK(player.getUniqueId())) {
-        Bukkit
-            .getScheduler()
-            .runTask(EasyAFK.instance, () -> kickPlayer(player));
-      } else if (currentTime - lastActive > EasyAFK.config.afkTimeout &&
-          !EasyAFK.instance.manager.isAFK(player.getUniqueId())) {
-        EasyAFK.instance.manager.toggleAFK(player, AFKMode.SOFT);
+
+      if (currentTime - lastActive > EasyAFK.config.afkTimeout) {
+        if (EasyAFK.config.kickEnabled && (isFull || currentTime - lastActive > EasyAFK.config.kickTimeout)) {
+          Bukkit
+              .getScheduler()
+              .runTask(EasyAFK.instance, () -> EasyAFK.instance.manager.kickPlayer(player));
+        }
+      } else if (!EasyAFK.instance.manager.isAFK(player.getUniqueId())) {
+        EasyAFK.instance.manager.enableAFK(player, AFKMode.SOFT);
       }
     }
   }
 
-  private void kickPlayer(final Player player) {
-    if (EasyAFK.config.bypassKickEnabled &&
-        player.hasPermission("easyafk.bypass.kick")) {
-      return;
-    }
-    player.kickPlayer(
-        Text.format(
-            "messages.kick",
-            true,
-            true,
-            new Replaceable("%player%", player.getName())));
-    if (EasyAFK.config.disableOnKick) {
-      EasyAFK.instance.manager.disableAFK(player);
-    }
-    DatabaseManager.updateLastActive(player.getUniqueId(), -1);
+  private boolean canBypass(Player p) {
+    return EasyAFK.config.bypassAfkEnabled && p.hasPermission("easyafk.bypass.afk") ||
+        EasyAFK.config.ignoredWorlds.contains(p.getWorld().getName()) ||
+        EasyAFK.instance.worldGuardIntegration != null
+            && EasyAFK.instance.worldGuardIntegration.isInAfkBypassSection(p);
   }
 }

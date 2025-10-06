@@ -13,16 +13,14 @@ import com.julizey.easyafk.database.DatabaseManager;
 import com.julizey.easyafk.hooks.TabIntegration;
 import com.julizey.easyafk.hooks.WorldGuardIntegration;
 import com.julizey.easyafk.utils.AfkEffects;
+import com.julizey.easyafk.utils.Text;
+import com.julizey.easyafk.utils.Text.Replaceable;
 
 public class AFKManager {
 
   private int kickTime;
   private int kickTimeIncrease;
   public HashMap<UUID, AFKState> states = new HashMap<UUID, AFKState>();
-
-  public boolean checkAFK(Player player) {
-    return false;
-  }
 
   public HashMap<UUID, AFKState> getPlayers() {
     return states;
@@ -80,6 +78,33 @@ public class AFKManager {
     }
     Bukkit.getPluginManager().callEvent(new AFKStopEvent(player, state));
     AfkEffects.disableAFK(player, state);
+  }
+
+  public void kickPlayer(Player p) {
+    if (EasyAFK.config.bypassKickEnabled && p.hasPermission("easyafk.bypass.kick")) {
+      return;
+    }
+    final UUID playerId = p.getUniqueId();
+    AFKState state = states.get(playerId);
+    states.remove(playerId);
+
+    if (EasyAFK.config.disableOnKick) {
+      p.setMetadata(
+          "afk",
+          new FixedMetadataValue(EasyAFK.instance, Boolean.FALSE));
+      if (DatabaseManager.containsAfkPlayer(playerId)) {
+        DatabaseManager.removeAfkPlayer(playerId);
+      }
+    }
+
+    Bukkit.getPluginManager().callEvent(new AFKKickEvent(p, state));
+    DatabaseManager.updateLastActive(playerId, -1);
+    p.kickPlayer(
+        Text.format(
+            "messages.kick",
+            true,
+            true,
+            new Replaceable("%player%", p.getName())));
   }
 
   public void setAfkKickTime(int seconds) {
