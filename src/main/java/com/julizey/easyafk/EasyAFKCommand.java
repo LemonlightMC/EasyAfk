@@ -50,7 +50,7 @@ public class EasyAFKCommand implements TabExecutor {
       return;
     }
     if (args.length == 0) {
-      EasyAFK.instance.manager.toggleAFK((Player) sender, AFKMode.HARD);
+      EasyAFK.manager.toggleAFK((Player) sender, AFKMode.HARD);
       return;
     }
 
@@ -64,7 +64,7 @@ public class EasyAFKCommand implements TabExecutor {
             "messages.command-status",
             new Text.Replaceable(
                 "%status%",
-                EasyAFK.instance.manager.isAFK((Player) sender)
+                EasyAFK.manager.isAFK((Player) sender)
                     ? "enabled"
                     : "disabled"));
       }
@@ -72,19 +72,19 @@ public class EasyAFKCommand implements TabExecutor {
         Player p = getTarget((Player) sender, args);
         if (p == null)
           return;
-        EasyAFK.instance.manager.toggleAFK(p, AFKMode.HARD);
+        EasyAFK.manager.toggleAFK(p, AFKMode.HARD);
       }
       case "enable" -> {
         Player p = getTarget((Player) sender, args);
         if (p == null)
           return;
-        EasyAFK.instance.manager.enableAFK(p, null);
+        EasyAFK.manager.enableAFK(p, null);
       }
       case "disable" -> {
         Player p = getTarget((Player) sender, args);
         if (p == null)
           return;
-        EasyAFK.instance.manager.disableAFK(p);
+        EasyAFK.manager.disableAFK(p);
       }
       case "reload" -> {
         if (!checkPermission(sender, "easyafk.admin")) {

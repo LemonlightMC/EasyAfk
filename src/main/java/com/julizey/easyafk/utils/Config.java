@@ -46,11 +46,6 @@ public class Config {
   public boolean disableOnLeave;
   public boolean disableOnKick;
 
-  // integrations
-  public boolean worldGuardEnabled;
-  public boolean tabEnabled;
-  public String tabPrefix;
-
   // database
   public String databaseType;
   public boolean clearOnReload = false;
@@ -71,10 +66,10 @@ public class Config {
 
     // afk check task
     interval = configFile.getLong("checker.interval", 1) * 20L;
-    kickTimeout = configFile.getLong("kick.timeout") * 1000L;
+    EasyAFK.manager.setKickTime(configFile.getLong("kick.timeout") * 1000L);
     kickEnabled = configFile.getBoolean("kick.enabled", true);
     kickEnabledWhenFull = configFile.getBoolean("kick.enabledWhenFull", true);
-    afkTimeout = configFile.getLong("afk.timeout", 1200) * 1000L;
+    EasyAFK.manager.setAfkTime(configFile.getLong("afk.timeout", 1200) * 1000L);
     bypassAfkEnabled = configFile.getBoolean("bypass-afk", true);
     bypassKickEnabled = configFile.getBoolean("bypass-kick", true);
     ignoredWorlds = configFile.getStringList("ignored-worlds");
@@ -94,9 +89,13 @@ public class Config {
     unafkTitleEnabled = configFile.getBoolean("unafk.title.enabled", true);
 
     // integrations
-    worldGuardEnabled = configFile.getBoolean("integration.worldguard", true);
-    tabEnabled = configFile.getBoolean("integration.tab.enabled", true);
-    tabPrefix = Text.convertColor(
+    if (configFile.getBoolean("integration.worldguard", true)) {
+      EasyAFK.manager.enableWorldGuardIntegration();
+    }
+    if (configFile.getBoolean("integration.tab.enabled", true)) {
+      EasyAFK.manager.enableTabCompatIntegration();
+    }
+    EasyAFK.manager.setTabPrefix(
         configFile.getString("integration.tab.prefix", "&c[AFK]"));
 
     // anti

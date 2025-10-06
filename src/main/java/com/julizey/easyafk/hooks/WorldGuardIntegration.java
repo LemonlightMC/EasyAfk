@@ -47,7 +47,7 @@ public class WorldGuardIntegration {
   }
 
   public void reload() {
-    if (!EasyAFK.config.worldGuardEnabled) {
+    if (!EasyAFK.manager.hasWorldGuardIntegration()) {
       unload();
       return;
     }

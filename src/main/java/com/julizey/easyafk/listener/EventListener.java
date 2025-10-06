@@ -17,7 +17,7 @@ public class EventListener implements Listener {
   public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
     if (event.getEntity() instanceof Player) {
       Player player = (Player) event.getEntity();
-      if (EasyAFK.instance.manager.isAFK(player, AFKMode.HARD)) {
+      if (EasyAFK.manager.isAFK(player, AFKMode.HARD)) {
         event.setCancelled(true);
       }
     }
@@ -27,7 +27,7 @@ public class EventListener implements Listener {
   @EventHandler
   public void onPlayerMove(PlayerMoveEvent event) {
     Player player = event.getPlayer();
-    if (EasyAFK.instance.manager.isAFK(player, AFKMode.HARD)) {
+    if (EasyAFK.manager.isAFK(player, AFKMode.HARD)) {
       event.setCancelled(true);
     }
   }
@@ -36,7 +36,7 @@ public class EventListener implements Listener {
   @EventHandler
   public void onPlayerInteract(PlayerInteractEvent event) {
     Player player = event.getPlayer();
-    if (EasyAFK.instance.manager.isAFK(player)) {
+    if (EasyAFK.manager.isAFK(player)) {
       event.setCancelled(true);
     }
   }
@@ -48,8 +48,8 @@ public class EventListener implements Listener {
       return;
     }
     Player player = event.getPlayer();
-    if (EasyAFK.instance.manager.isAFK(player)) {
-      EasyAFK.instance.manager.disableAFK(player);
+    if (EasyAFK.manager.isAFK(player)) {
+      EasyAFK.manager.disableAFK(player);
     }
   }
 }

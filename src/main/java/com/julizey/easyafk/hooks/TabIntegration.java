@@ -15,7 +15,7 @@ public class TabIntegration {
   }
 
   public void reload() {
-    if (!EasyAFK.config.tabEnabled) {
+    if (!EasyAFK.manager.hasTabIntegration()) {
       unload();
       return;
     }
@@ -27,8 +27,8 @@ public class TabIntegration {
     placeholderManager.registerPlayerPlaceholder(
         "%afk%",
         100,
-        player -> EasyAFK.instance.manager.isAFK(player.getUniqueId())
-            ? EasyAFK.config.tabPrefix
+        player -> EasyAFK.manager.isAFK(player.getUniqueId())
+            ? EasyAFK.manager.tabPrefix
             : "");
   }
 

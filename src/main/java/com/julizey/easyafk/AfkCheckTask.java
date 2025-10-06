@@ -29,10 +29,10 @@ public class AfkCheckTask extends BukkitRunnable {
         if (EasyAFK.config.kickEnabled && (isFull || currentTime - lastActive > EasyAFK.config.kickTimeout)) {
           Bukkit
               .getScheduler()
-              .runTask(EasyAFK.instance, () -> EasyAFK.instance.manager.kickPlayer(player));
+              .runTask(EasyAFK.instance, () -> EasyAFK.manager.kickPlayer(player));
         }
-      } else if (!EasyAFK.instance.manager.isAFK(player.getUniqueId())) {
-        EasyAFK.instance.manager.enableAFK(player, AFKMode.SOFT);
+      } else if (!EasyAFK.manager.isAFK(player.getUniqueId())) {
+        EasyAFK.manager.enableAFK(player, AFKMode.SOFT);
       }
     }
   }

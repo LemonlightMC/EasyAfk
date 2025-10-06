@@ -16,6 +16,7 @@ public class EasyAFK extends JavaPlugin {
 
   public static EasyAFK instance;
   public static Config config;
+  public static AFKManager manager;
 
   public TabIntegration tabIntegration = null;
   public WorldGuardIntegration worldGuardIntegration = null;
@@ -24,7 +25,6 @@ public class EasyAFK extends JavaPlugin {
   private boolean hasRegisteredGUIs = false;
   public AnimationManager animationManager;
   public AfkCheckTask afkChecker;
-  public AFKManager manager;
 
   public void onLoad() {
     instance = this;
