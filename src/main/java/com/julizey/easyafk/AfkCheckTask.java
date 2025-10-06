@@ -2,16 +2,20 @@ package com.julizey.easyafk;
 
 import com.julizey.easyafk.api.AFKState.AFKMode;
 import com.julizey.easyafk.database.DatabaseManager;
+import com.julizey.easyafk.hooks.Hooks;
+import com.julizey.easyafk.hooks.WorldGuardHook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class AfkCheckTask extends BukkitRunnable {
+  private WorldGuardHook hook;
 
   public void run() {
     final long currentTime = System.currentTimeMillis();
     final boolean isFull = EasyAFK.config.kickEnabledWhenFull &&
         Bukkit.getOnlinePlayers().size() == Bukkit.getMaxPlayers();
+    hook = (WorldGuardHook) Hooks.getHook("worldguard");
 
     for (final Player player : Bukkit.getOnlinePlayers()) {
       if (canBypass(player)) {
@@ -40,7 +44,6 @@ public class AfkCheckTask extends BukkitRunnable {
   private boolean canBypass(final Player p) {
     return EasyAFK.config.bypassAfkEnabled && p.hasPermission("easyafk.bypass.afk") ||
         EasyAFK.config.ignoredWorlds.contains(p.getWorld().getName()) ||
-        EasyAFK.instance.worldGuardIntegration != null
-            && EasyAFK.instance.worldGuardIntegration.isInAfkBypassSection(p);
+        hook != null && hook.isInAfkBypassSection(p);
   }
 }

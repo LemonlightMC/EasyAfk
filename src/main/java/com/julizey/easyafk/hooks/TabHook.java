@@ -1,21 +1,25 @@
 package com.julizey.easyafk.hooks;
 
 import com.julizey.easyafk.EasyAFK;
-import com.julizey.easyafk.utils.Text;
+import com.julizey.easyafk.hooks.Hooks.Hook;
+
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.placeholder.PlaceholderManager;
 
-public class TabIntegration {
+public class TabHook extends Hook {
 
   private static PlaceholderManager placeholderManager = null;
 
-  public TabIntegration() {
-    reload();
-    Text.info("TAB integration has been enabled");
+  public TabHook() {
+    super("tab");
+  }
+
+  public static void create() {
+    new TabHook();
   }
 
   public void reload() {
-    if (!EasyAFK.manager.hasTabIntegration()) {
+    if (!isEnabled) {
       unload();
       return;
     }
@@ -27,7 +31,7 @@ public class TabIntegration {
     placeholderManager.registerPlayerPlaceholder(
         "%afk%",
         100,
-        player -> EasyAFK.manager.isAFK(player.getUniqueId())
+        player -> isEnabled && EasyAFK.manager.isAFK(player.getUniqueId())
             ? EasyAFK.manager.tabPrefix
             : "");
   }
@@ -36,6 +40,10 @@ public class TabIntegration {
     if (placeholderManager != null) {
       placeholderManager.unregisterPlaceholder("%afk%");
     }
-    Text.info("TAB integration has been disabled");
+  }
+
+  @Override
+  public void load() {
+    reload();
   }
 }

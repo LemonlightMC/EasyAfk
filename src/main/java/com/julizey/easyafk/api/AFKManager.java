@@ -10,8 +10,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import com.julizey.easyafk.EasyAFK;
 import com.julizey.easyafk.api.AFKState.AFKMode;
 import com.julizey.easyafk.database.DatabaseManager;
-import com.julizey.easyafk.hooks.TabIntegration;
-import com.julizey.easyafk.hooks.WorldGuardIntegration;
+import com.julizey.easyafk.hooks.Hooks;
 import com.julizey.easyafk.utils.AfkEffects;
 import com.julizey.easyafk.utils.Text;
 import com.julizey.easyafk.utils.Text.Replaceable;
@@ -160,37 +159,27 @@ public class AFKManager {
     this.tabPrefix = Text.convertColor(tabPrefix);
   }
 
-  public void enableTabCompatIntegration() {
-    if (EasyAFK.instance.tabIntegration == null) {
-      EasyAFK.instance.tabIntegration = new TabIntegration();
-    }
+  public void enableTabHook() {
+    Hooks.enable("tab");
   }
 
-  public void disableTabCompatIntegration() {
-    if (EasyAFK.instance.tabIntegration != null) {
-      EasyAFK.instance.tabIntegration.unload();
-      EasyAFK.instance.tabIntegration = null;
-    }
+  public void disableTabHook() {
+    Hooks.disable("tab");
   }
 
-  public boolean hasTabIntegration() {
-    return EasyAFK.instance.tabIntegration != null;
+  public boolean hasTabHook() {
+    return Hooks.isEnabled("tab");
   }
 
-  public void disableWorldGuardCompatIntegration() {
-    if (EasyAFK.instance.worldGuardIntegration != null) {
-      EasyAFK.instance.worldGuardIntegration.unload();
-      EasyAFK.instance.worldGuardIntegration = null;
-    }
+  public void enableWorldGuardHook() {
+    Hooks.enable("worldguard");
   }
 
-  public void enableWorldGuardIntegration() {
-    if (EasyAFK.instance.worldGuardIntegration == null) {
-      EasyAFK.instance.worldGuardIntegration = new WorldGuardIntegration();
-    }
+  public void disableWorldGuardHook() {
+    Hooks.disable("worldguard");
   }
 
-  public boolean hasWorldGuardIntegration() {
-    return EasyAFK.instance.worldGuardIntegration != null;
+  public boolean hasWorldGuardHook() {
+    return Hooks.isEnabled("worldguard");
   }
 }

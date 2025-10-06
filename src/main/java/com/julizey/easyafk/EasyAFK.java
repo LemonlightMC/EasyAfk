@@ -18,8 +18,6 @@ public class EasyAFK extends JavaPlugin {
   public static Config config;
   public static AFKManager manager;
 
-  public TabIntegration tabIntegration = null;
-  public WorldGuardIntegration worldGuardIntegration = null;
   private AfkPlayerOverviewGUI afkPlayerOverviewGUI;
   private AfkPlayerActionsGUI afkPlayerActionsGUI;
   public AnimationManager animationManager;
@@ -54,14 +52,15 @@ public class EasyAFK extends JavaPlugin {
         .runTaskAsynchronously(
             EasyAFK.instance,
             () -> {
+              DatabaseManager.reload(true);
               animationManager = new AnimationManager(config.configFile, "effects");
               if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
-                tabIntegration = new TabIntegration();
+                TabHook.create();
               }
               if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-                worldGuardIntegration = new WorldGuardIntegration();
+                WorldGuardHook.create();
               }
-              DatabaseManager.reload(true);
+              Hooks.load();
             });
 
     afkChecker.runTaskTimerAsynchronously(
@@ -74,14 +73,8 @@ public class EasyAFK extends JavaPlugin {
     if (afkChecker != null) {
       afkChecker.cancel();
     }
-    if (tabIntegration != null) {
-      tabIntegration.unload();
-      tabIntegration = null;
-    }
-    if (worldGuardIntegration != null) {
-      worldGuardIntegration.unload();
-      worldGuardIntegration = null;
-    }
+    Hooks.unload();
+    Hooks.clear();
     DatabaseManager.close();
   }
 
@@ -95,12 +88,7 @@ public class EasyAFK extends JavaPlugin {
       DatabaseManager.reload(full);
 
       if (full) {
-        if (tabIntegration != null) {
-          tabIntegration.reload();
-        }
-        if (worldGuardIntegration != null) {
-          worldGuardIntegration.reload();
-        }
+        Hooks.reload();
       }
     } catch (final Exception ex) {
       Text.warn("Failed to reload the configs!");

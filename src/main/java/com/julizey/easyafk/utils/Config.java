@@ -1,6 +1,8 @@
 package com.julizey.easyafk.utils;
 
 import com.julizey.easyafk.EasyAFK;
+import com.julizey.easyafk.hooks.Hooks;
+
 import java.nio.file.Path;
 import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -90,10 +92,11 @@ public class Config {
 
     // integrations
     if (configFile.getBoolean("integration.worldguard", true)) {
-      EasyAFK.manager.enableWorldGuardIntegration();
+      Hooks.enable("worldguard");
+      ;
     }
     if (configFile.getBoolean("integration.tab.enabled", true)) {
-      EasyAFK.manager.enableTabCompatIntegration();
+      Hooks.enable("tab");
     }
     EasyAFK.manager.setTabPrefix(
         configFile.getString("integration.tab.prefix", "&c[AFK]"));

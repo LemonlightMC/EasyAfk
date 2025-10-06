@@ -1,6 +1,6 @@
 package com.julizey.easyafk.hooks;
 
-import com.julizey.easyafk.EasyAFK;
+import com.julizey.easyafk.hooks.Hooks.Hook;
 import com.julizey.easyafk.utils.Text;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
@@ -14,18 +14,21 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.entity.Player;
 
-public class WorldGuardIntegration {
+public class WorldGuardHook extends Hook {
 
   public static WorldGuardPlatform platform;
   private StateFlag AFK_BYPASS = new StateFlag("afk-bypass", false);
 
-  public WorldGuardIntegration() {
-    reload();
-    Text.info("WorldGuard integration has been enabled");
+  public WorldGuardHook() {
+    super("worldguard");
+  }
+
+  public static void create() {
+    new TabHook();
   }
 
   public boolean isInAfkBypassSection(final Player player) {
-    if (platform == null) {
+    if (!isEnabled || platform == null) {
       return false;
     }
     final RegionManager regions = platform
@@ -47,7 +50,7 @@ public class WorldGuardIntegration {
   }
 
   public void reload() {
-    if (!EasyAFK.manager.hasWorldGuardIntegration()) {
+    if (!isEnabled) {
       unload();
       return;
     }
@@ -70,6 +73,10 @@ public class WorldGuardIntegration {
 
   public void unload() {
     platform = null;
-    Text.info("WorldGuard integration has been disabled");
+  }
+
+  @Override
+  public void load() {
+    reload();
   }
 }
