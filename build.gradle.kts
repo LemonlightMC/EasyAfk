@@ -58,7 +58,7 @@ repositories {
 dependencies {
     compileOnly(libs.org.spigotmc.spigot.api)
     compileOnly(libs.me.clip.placeholderapi)
-    compileOnly(libs.net.essentialsx.essentialsx)
+    //compileOnly(libs.net.essentialsx.essentialsx)
     compileOnly(libs.com.discordsrv.discordsrv)
     compileOnly("com.github.NEZNAMY:TAB-API:5.2.1") {
         exclude(group = "com.google.code.gson", module = "gson")

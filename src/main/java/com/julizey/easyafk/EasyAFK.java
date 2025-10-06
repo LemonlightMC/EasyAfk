@@ -60,6 +60,9 @@ public class EasyAFK extends JavaPlugin {
               if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
                 WorldGuardHook.create();
               }
+              if (Bukkit.getPluginManager().isPluginEnabled("DiscordSRV")) {
+                DiscordSRVHook.create();
+              }
               Hooks.load();
             });
 
@@ -78,18 +81,15 @@ public class EasyAFK extends JavaPlugin {
     DatabaseManager.close();
   }
 
-  public void reload(final boolean full) {
+  public void reload() {
     try {
       saveDefaultConfig();
       reloadConfig();
       Text.reload();
       config.reload(getConfig());
       animationManager.reload();
-      DatabaseManager.reload(full);
-
-      if (full) {
-        Hooks.reload();
-      }
+      DatabaseManager.reload(true);
+      Hooks.reload();
     } catch (final Exception ex) {
       Text.warn("Failed to reload the configs!");
       ex.printStackTrace();

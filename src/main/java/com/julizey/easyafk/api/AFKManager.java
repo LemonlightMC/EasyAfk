@@ -22,6 +22,7 @@ public class AFKManager {
   public long afkTime;
   public long afkTimeIncrease;
   public String tabPrefix;
+  public String channelId;
   private final HashMap<UUID, AFKState> states = new HashMap<UUID, AFKState>();
 
   public HashMap<UUID, AFKState> getPlayers() {
@@ -181,5 +182,25 @@ public class AFKManager {
 
   public boolean hasWorldGuardHook() {
     return Hooks.isEnabled("worldguard");
+  }
+
+  public void enableDiscordHook() {
+    Hooks.enable("discordsrv");
+  }
+
+  public void disableDiscordHook() {
+    Hooks.disable("discordsrv");
+  }
+
+  public boolean hasDiscordHook() {
+    return Hooks.isEnabled("discordsrv");
+  }
+
+  public String getDiscordChannel() {
+    return channelId;
+  }
+
+  public void setDiscordChannel(String channelId) {
+    this.channelId = channelId;
   }
 }

@@ -90,7 +90,7 @@ public class EasyAFKCommand implements TabExecutor {
         if (!checkPermission(sender, "easyafk.admin")) {
           return;
         }
-        EasyAFK.instance.reload(true);
+        EasyAFK.instance.reload();
         Text.send(sender, "Config reloaded.");
       }
       case "overview" -> {
