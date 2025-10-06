@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class MoveListener implements Listener {
 
   private final Map<UUID, Location> lastLocations = new HashMap<>();
-  private final Map<UUID, Integer> repeatMoveCount = new HashMap<>();
 
   public MoveListener() {
   }
@@ -60,8 +59,10 @@ public class MoveListener implements Listener {
 
     if (EasyAFK.config.antiMicroMove) {
       double dx = Math.abs(lastLoc.x - currLoc.x);
+      double dy = Math.abs(lastLoc.y - currLoc.y);
       double dz = Math.abs(lastLoc.z - currLoc.z);
       if (dx < EasyAFK.config.antiMicroMoveDistance &&
+          dy < EasyAFK.config.antiMicroMoveDistance &&
           dz < EasyAFK.config.antiMicroMoveDistance) {
         lastLocations.put(playerId, currLoc.clone());
         return true;
@@ -86,22 +87,6 @@ public class MoveListener implements Listener {
       }
     }
 
-    if (EasyAFK.config.antiMacroPattern) {
-      int count = repeatMoveCount.getOrDefault(playerId, 0);
-      double dx = Math.abs(lastLoc.x - currLoc.x);
-      double dz = Math.abs(lastLoc.z - currLoc.z);
-      if (dx < EasyAFK.config.antiMicroMoveDistance &&
-          dz < EasyAFK.config.antiMicroMoveDistance) {
-        count++;
-      } else {
-        count = 0;
-      }
-      repeatMoveCount.put(playerId, count);
-      if (count > 10) {
-        lastLocations.put(playerId, currLoc.clone());
-        return true;
-      }
-    }
     lastLocations.put(playerId, currLoc.clone());
     return false;
   }

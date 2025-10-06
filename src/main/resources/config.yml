@@ -20,9 +20,6 @@ anti:
   rotationOnly: false
   rotationDistance: 10.0
 
-  macroPattern: false
-  macroPatternDistance: 2.0
-
   jump: false
   jumpDistance: 2
 

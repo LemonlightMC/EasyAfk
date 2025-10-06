@@ -39,8 +39,6 @@ public class Config {
   public double antiMicroMoveDistance;
   public boolean antiRotationOnly;
   public double antiRotationDistance;
-  public boolean antiMacroPattern;
-  public double antiMacroPatternDistance;
   public boolean antiJump;
   public double antiJumpDistance;
 
@@ -112,8 +110,6 @@ public class Config {
     antiMicroMoveDistance = configFile.getDouble("anti.microMoveDistance", 0.3F);
     antiRotationOnly = configFile.getBoolean("anti.rotationOnly", false);
     antiRotationDistance = configFile.getDouble("anti.rotationDistance", 10.0F);
-    antiMacroPattern = configFile.getBoolean("anti.macroPattern", false);
-    antiMacroPatternDistance = configFile.getDouble("anti.macroPatternDistance", 0.3F);
     antiJump = configFile.getBoolean("anti.jump", false);
     antiJumpDistance = configFile.getDouble("anti.jumpDistance", 0.3F);
 
