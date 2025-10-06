@@ -1,7 +1,7 @@
-afk: "&cYou are AFK. Move to avoid being kicked."
-afk-broadcast: "&cPlayer&a %player% &cis now AFK"
+afk: "&cYou are AFK! Move to avoid being kicked!"
 afk-title: "&e> AFK <"
 afk-subtitle: "&7You are now AFK"
+afk-broadcast: "&cPlayer&a %player% &cis now AFK"
 
 unafk: "&aYou are no longer AFK"
 unafk-title: "&a> Welcome back! <"

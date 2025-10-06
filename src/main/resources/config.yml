@@ -27,12 +27,11 @@ anti:
 bypass-afk: true
 # Bypass AFK kick
 bypass-kick: true
-
 # disable AFK mode when a player moves
 disable-on-move: false
 # disable AFK mode when a player leaves the server
 disable-on-leave: true
-# disable AFK mode when a player joins the server (makes Auto Relogging possible)
+# disable AFK mode when a player joins the server (makes Auto Relogging easier)
 disable-on-kick: true
 
 # Ignore AFK detection in these worlds
@@ -45,30 +44,19 @@ cooldown: 2
 afk:
   # Timeout in seconds
   timeout: 20
-  message: "&cYou are AFK. Move to avoid being kicked."
 
-  broadcast:
-    # Enable broadcast message to all online players when player is AFK
-    enabled: false
-    # Placeholders:
-    # %player% - Display name of player
-    message: "&cPlayer&a %player% &cis now AFK"
-  title:
-    enabled: true
-    title: "&eAFK"
-    subtitle: "&7You are now AFK"
+  # Things that should happen when entering afk
+  effects: true
+  broadcast: false
+  title: true
+  subTitle: true
 
 unafk:
-  broadcast:
-    # Broadcast a message when a player is not longer AFK
-    enabled: false
-    # Placeholders:
-    # %player% - Display name of player
-    message: "&aPlayer&7 %player% &ais not longer AFK"
-  title:
-    enabled: true
-    title: "&aWelcome back!"
-    subtitle: "&7You are no longer AFK"
+  # Things that should happen when leaving afk
+  effects: true
+  broadcast: false
+  title: true
+  subTitle: true
 
 effects:
   enable:
@@ -122,13 +110,12 @@ effects:
         offsetZ: 1.0
         extra: 0.1
 kick:
-  # Enable the kick function after being AFK for x amount of time
+  # Kick the player after being AFK for x amount of time
   enabled: true
-  # Enable the kick function when the lobby is full
+  # Kick the player only when the lobby is full
   enabledWhenFull: true
   # Timeout in seconds
   timeout: 30
-  message: "&cYou have been kicked from this server for being AFK too long!"
 
 integration:
   # https://dev.bukkit.org/projects/worldguard

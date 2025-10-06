@@ -22,15 +22,18 @@ public class Config {
   public boolean bypassKickEnabled;
   public List<String> ignoredWorlds;
 
-  // afk state
+  // afk/unafk
   public String afkTitle;
-  public String afkSubtitle;
-  public String unafkTitle;
-  public String unafkSubtitle;
-  public boolean afkBroadcastEnabled;
   public boolean afkTitleEnabled;
-  public boolean unafkBroadcastEnabled;
+  public String afkSubtitle;
+  public boolean afkSubTitleEnabled;
+  public boolean afkBroadcastEnabled;
+
+  public String unafkTitle;
   public boolean unafkTitleEnabled;
+  public String unafkSubtitle;
+  public boolean unafkSubTitleEnabled;
+  public boolean unafkBroadcastEnabled;
 
   // listener
   public boolean antiVehicle;
@@ -80,20 +83,22 @@ public class Config {
     disableOnLeave = configFile.getBoolean("disable-on-leave", true);
     disableOnKick = configFile.getBoolean("disable-on-kick", false);
 
-    // afk state
+    // afk effects
     afkTitle = Text.format("messages.afk-title", true, false);
     afkSubtitle = Text.format("messages.afk-subtitle", true, false);
+    afkTitleEnabled = configFile.getBoolean("afk.title", true);
+    afkSubTitleEnabled = configFile.getBoolean("afk.subtitle", true);
+    afkBroadcastEnabled = configFile.getBoolean("afk.broadcast", false);
+
     unafkTitle = Text.format("messages.unafk-title", true, false);
     unafkSubtitle = Text.format("messages.unafk-subtitle", true, false);
-    afkBroadcastEnabled = configFile.getBoolean("afk.broadcast.enabled", false);
-    afkTitleEnabled = configFile.getBoolean("afk.title.enabled", true);
-    unafkBroadcastEnabled = configFile.getBoolean("unafk.broadcast.enabled", false);
-    unafkTitleEnabled = configFile.getBoolean("unafk.title.enabled", true);
+    unafkTitleEnabled = configFile.getBoolean("unafk.title", true);
+    unafkSubTitleEnabled = configFile.getBoolean("unafk.subtitle", true);
+    unafkBroadcastEnabled = configFile.getBoolean("unafk.broadcast", false);
 
     // integrations
     if (configFile.getBoolean("integration.worldguard", true)) {
       Hooks.enable("worldguard");
-      ;
     }
     if (configFile.getBoolean("integration.tab.enabled", true)) {
       Hooks.enable("tab");
