@@ -11,7 +11,6 @@ plugins {
 
 repositories {
     mavenLocal()
-    mavenCentral()
     maven {
         url = uri("https://hub.spigotmc.org/nexus/content/groups/public/")
     }
@@ -43,10 +42,6 @@ repositories {
     }
 
     maven {
-        url = uri("https://repo.essentialsx.net/releases/")
-    }
-
-    maven {
         url = uri("https://papermc.io/repo/repository/maven-public/")
     }
 
@@ -58,7 +53,6 @@ repositories {
 dependencies {
     compileOnly(libs.org.spigotmc.spigot.api)
     compileOnly(libs.me.clip.placeholderapi)
-    //compileOnly(libs.net.essentialsx.essentialsx)
     compileOnly(libs.com.discordsrv.discordsrv)
     compileOnly("com.github.NEZNAMY:TAB-API:5.2.1") {
         exclude(group = "com.google.code.gson", module = "gson")
@@ -71,7 +65,7 @@ dependencies {
 }
 
 group = "com.julizey"
-version = "1.0.0"
+version = "1.4.0"
 description = "EasyAFK"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
