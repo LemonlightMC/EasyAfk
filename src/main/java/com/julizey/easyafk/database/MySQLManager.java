@@ -25,6 +25,10 @@ public class MySQLManager implements DatabaseManager.DatabaseProvider {
     }
   }
 
+  public String getName() {
+    return "mysql";
+  }
+
   public boolean isConnected() {
     try {
       return connection != null && !connection.isClosed();

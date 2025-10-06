@@ -25,6 +25,10 @@ public class SQLiteManager implements DatabaseManager.DatabaseProvider {
     }
   }
 
+  public String getName() {
+    return "sqlite";
+  }
+
   public boolean isConnected() {
     try {
       return connection != null && !connection.isClosed();

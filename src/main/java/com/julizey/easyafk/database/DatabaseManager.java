@@ -22,6 +22,8 @@ public class DatabaseManager {
     void removeAllAfkPlayers();
 
     boolean containsAfkPlayer(UUID playerId);
+
+    String getName();
   }
 
   private static ConcurrentHashMap<UUID, Long> lastActiveCache = new ConcurrentHashMap<>();
@@ -31,6 +33,9 @@ public class DatabaseManager {
   private static boolean isSetup = false;
 
   public static void setup() {
+    if (isSetup) {
+      provider.close();
+    }
     final String databaseType = EasyAFK.config.configFile.getString("database");
     if (databaseType.equalsIgnoreCase("mysql") &&
         EasyAFK.config.configFile.getBoolean("mysql.enabled")) {
@@ -39,16 +44,18 @@ public class DatabaseManager {
         EasyAFK.config.configFile.getBoolean("sqlite.enabled")) {
       provider = new SQLiteManager();
     }
-    if (provider != null && provider.isConnected())
+    if (provider != null && provider.isConnected()) {
       isSetup = true;
+    }
     reload();
   }
 
   public static void reload() {
-    if (!isSetup)
-      return;
+    setup();
     if (EasyAFK.config.clearOnReload) {
       dbExecutor.submit(() -> provider.removeAllAfkPlayers());
+      lastActiveCache.clear();
+      afkPlayerCache.clear();
     }
   }
 
