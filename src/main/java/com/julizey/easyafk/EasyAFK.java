@@ -2,12 +2,9 @@ package com.julizey.easyafk;
 
 import com.julizey.easyafk.api.AFKManager;
 import com.julizey.easyafk.database.DatabaseManager;
-import com.julizey.easyafk.gui.AfkPlayerActionsGUI;
-import com.julizey.easyafk.gui.AfkPlayerOverviewGUI;
-import com.julizey.easyafk.hooks.TabIntegration;
-import com.julizey.easyafk.hooks.WorldGuardIntegration;
-import com.julizey.easyafk.listener.MoveListener;
-import com.julizey.easyafk.listener.PlayerQuitListener;
+import com.julizey.easyafk.gui.*;
+import com.julizey.easyafk.hooks.*;
+import com.julizey.easyafk.listener.*;
 import com.julizey.easyafk.utils.AnimationManager;
 import com.julizey.easyafk.utils.Config;
 import com.julizey.easyafk.utils.Text;
@@ -45,7 +42,7 @@ public class EasyAFK extends JavaPlugin {
     getServer().getPluginManager().registerEvents(new MoveListener(), this);
     getServer()
         .getPluginManager()
-        .registerEvents(new PlayerQuitListener(), this);
+        .registerEvents(new EventListener(), this);
 
     // Command
     EasyAFKCommand afkCommand = new EasyAFKCommand();
