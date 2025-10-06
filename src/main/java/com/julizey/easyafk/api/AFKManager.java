@@ -68,12 +68,11 @@ public class AFKManager {
   public void enableAFK(final Player player, final AFKMode mode) {
     final UUID playerId = player.getUniqueId();
     states.put(playerId, new AFKState(mode, System.currentTimeMillis()));
+    DatabaseManager.addAfkPlayer(playerId, mode);
     player.setMetadata(
         "afk",
         new FixedMetadataValue(EasyAFK.instance, mode));
-    if (!DatabaseManager.containsAfkPlayer(playerId)) {
-      DatabaseManager.addAfkPlayer(playerId, mode);
-    }
+    Bukkit.getPluginManager().callEvent(new AFKStartEvent(player));
 
     AfkEffects.enableAFK(player);
   }
@@ -82,13 +81,12 @@ public class AFKManager {
     final UUID playerId = player.getUniqueId();
     final AFKState state = states.get(playerId);
     states.remove(playerId);
+    DatabaseManager.removeAfkPlayer(playerId);
 
     player.setMetadata(
         "afk",
         new FixedMetadataValue(EasyAFK.instance, Boolean.FALSE));
-    if (DatabaseManager.containsAfkPlayer(playerId)) {
-      DatabaseManager.removeAfkPlayer(playerId);
-    }
+
     Bukkit.getPluginManager().callEvent(new AFKStopEvent(player, state));
     AfkEffects.disableAFK(player, state);
   }
@@ -102,12 +100,10 @@ public class AFKManager {
     states.remove(playerId);
 
     if (EasyAFK.config.disableOnKick) {
+      DatabaseManager.removeAfkPlayer(playerId);
       p.setMetadata(
           "afk",
           new FixedMetadataValue(EasyAFK.instance, Boolean.FALSE));
-      if (DatabaseManager.containsAfkPlayer(playerId)) {
-        DatabaseManager.removeAfkPlayer(playerId);
-      }
     }
 
     Bukkit.getPluginManager().callEvent(new AFKKickEvent(p, state));

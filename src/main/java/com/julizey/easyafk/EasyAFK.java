@@ -22,21 +22,20 @@ public class EasyAFK extends JavaPlugin {
   public WorldGuardIntegration worldGuardIntegration = null;
   private AfkPlayerOverviewGUI afkPlayerOverviewGUI;
   private AfkPlayerActionsGUI afkPlayerActionsGUI;
-  private boolean hasRegisteredGUIs = false;
   public AnimationManager animationManager;
   public AfkCheckTask afkChecker;
 
   public void onLoad() {
     instance = this;
     saveDefaultConfig();
+    reloadConfig();
     config = new Config(instance.getConfig());
-    reload(false);
+    Text.reload();
   }
 
   public void onEnable() {
     manager = new AFKManager();
     afkChecker = new AfkCheckTask();
-    animationManager = new AnimationManager(config.configFile, "effects");
 
     // Events
     getServer().getPluginManager().registerEvents(new MoveListener(), this);
@@ -55,13 +54,14 @@ public class EasyAFK extends JavaPlugin {
         .runTaskAsynchronously(
             EasyAFK.instance,
             () -> {
+              animationManager = new AnimationManager(config.configFile, "effects");
               if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
                 tabIntegration = new TabIntegration();
               }
               if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
                 worldGuardIntegration = new WorldGuardIntegration();
               }
-              DatabaseManager.setup();
+              DatabaseManager.reload(true);
             });
 
     afkChecker.runTaskTimerAsynchronously(
@@ -92,12 +92,9 @@ public class EasyAFK extends JavaPlugin {
       Text.reload();
       config.reload(getConfig());
       animationManager.reload();
-      DatabaseManager.reload();
+      DatabaseManager.reload(full);
 
       if (full) {
-        if (!DatabaseManager.isConnected()) {
-          DatabaseManager.setup();
-        }
         if (tabIntegration != null) {
           tabIntegration.reload();
         }
@@ -112,22 +109,16 @@ public class EasyAFK extends JavaPlugin {
   }
 
   public void openOverviewGUI(final Player p) {
-    if (!hasRegisteredGUIs) {
-      hasRegisteredGUIs = true;
+    if (afkPlayerOverviewGUI == null) {
       afkPlayerOverviewGUI = new AfkPlayerOverviewGUI();
-      afkPlayerActionsGUI = new AfkPlayerActionsGUI();
       getServer().getPluginManager().registerEvents(afkPlayerOverviewGUI, this);
-      getServer().getPluginManager().registerEvents(afkPlayerActionsGUI, this);
     }
     afkPlayerOverviewGUI.openGUI(p, 1);
   }
 
   public void openActionGUI(final Player p, final Player target) {
-    if (!hasRegisteredGUIs) {
-      hasRegisteredGUIs = true;
-      afkPlayerOverviewGUI = new AfkPlayerOverviewGUI();
+    if (afkPlayerActionsGUI == null) {
       afkPlayerActionsGUI = new AfkPlayerActionsGUI();
-      getServer().getPluginManager().registerEvents(afkPlayerOverviewGUI, this);
       getServer().getPluginManager().registerEvents(afkPlayerActionsGUI, this);
     }
     afkPlayerActionsGUI.openGUI(p, target);

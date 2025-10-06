@@ -47,11 +47,16 @@ public class DatabaseManager {
     if (provider != null && provider.isConnected()) {
       isSetup = true;
     }
-    reload();
+    reload(false);
   }
 
-  public static void reload() {
-    setup();
+  public static void reload(boolean resetup) {
+    if (provider == null || !provider.isConnected()) {
+      return;
+    }
+    if (resetup) {
+      setup();
+    }
     if (EasyAFK.config.clearOnReload) {
       dbExecutor.submit(() -> provider.removeAllAfkPlayers());
       lastActiveCache.clear();
