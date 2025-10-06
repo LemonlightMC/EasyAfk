@@ -51,6 +51,11 @@ public class Config {
   public boolean disableOnLeave;
   public boolean disableOnKick;
 
+  // integrations
+  public String discordAvatarURL;
+  public String discordChannel;
+  public boolean discordAFKTime;
+
   // database
   public String databaseType;
   public boolean clearOnReload = false;
@@ -105,6 +110,12 @@ public class Config {
     }
     EasyAFK.manager.setTabPrefix(
         configFile.getString("integration.tab.prefix", "&c[AFK]"));
+    if (configFile.getBoolean("integration.discordsrv.enabled", true)) {
+      Hooks.enable("discordsrv");
+    }
+    discordChannel = configFile.getString("integration.discordsrv.channelId");
+    discordAvatarURL = configFile.getString("integration.discordsrv.avatarURL");
+    discordAFKTime = configFile.getBoolean("integration.discordsrv.withTime", true);
 
     // anti
     antiVehicle = configFile.getBoolean("anti.infinite-vehicle", false);

@@ -1,6 +1,8 @@
 package com.julizey.easyafk.hooks;
 
 import java.util.HashMap;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class Hooks {
   private static HashMap<String, Hook> hooks = new HashMap<>(6);
@@ -19,6 +21,24 @@ public class Hooks {
 
   public static Hook getHook(final String name) {
     return hooks.get(name);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <H extends Hook> void consumeHook(final String name, final Consumer<H> consumer) {
+    Hook hook = hooks.get(name);
+    if (hook == null || !hook.isEnabled) {
+      return;
+    }
+    consumer.accept((H) hook);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <H extends Hook> boolean predicateHook(final String name, final Predicate<H> consumer) {
+    Hook hook = hooks.get(name);
+    if (hook == null || !hook.isEnabled) {
+      return false;
+    }
+    return consumer.test((H) hook);
   }
 
   public static boolean isLoaded(final String name) {

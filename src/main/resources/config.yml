@@ -124,6 +124,10 @@ integration:
   tab:
     enabled: true
     prefix: "&c[AFK] "
+  discordsrv:
+    enabled: false
+    channelId: ""
+    avatarURL: "https://api.mineatar.io/face/%uuid%?scale=16"
 
 # Database for storing AFK players
 database: "sqlite"

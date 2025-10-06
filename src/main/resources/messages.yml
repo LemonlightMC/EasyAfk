@@ -11,6 +11,10 @@ unafk-broadcast: "&aPlayer&7 %player% &ais not longer AFK"
 kick: "&cYou have been kicked from this server for being AFK too long!"
 kick-broadcast: "&cPlayer&7 %player% &cis AFK too long and has been kicked"
 
+discord-afkMessage: "Player %player% is now AFK"
+discord-unafkMessage: "Player %player% is no longer AFK"
+discord-afkTimeMessage: "They were AFK for: %time%"
+
 command-onlyPlayers: "&cOnly players can use this command!"
 command-cooldown: "&cYou must wait %time% seconds before using this command again!"
 command-status: "AFK mode is &7%status%!"

@@ -10,6 +10,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import com.julizey.easyafk.EasyAFK;
 import com.julizey.easyafk.api.AFKState.AFKMode;
 import com.julizey.easyafk.database.DatabaseManager;
+import com.julizey.easyafk.hooks.DiscordSRVHook;
 import com.julizey.easyafk.hooks.Hooks;
 import com.julizey.easyafk.utils.AfkEffects;
 import com.julizey.easyafk.utils.Text;
@@ -73,6 +74,7 @@ public class AFKManager {
         "afk",
         new FixedMetadataValue(EasyAFK.instance, mode));
     Bukkit.getPluginManager().callEvent(new AFKStartEvent(player));
+    Hooks.consumeHook("discordsrv", (DiscordSRVHook hook) -> hook.sendMessage(player, true));
 
     AfkEffects.enableAFK(player);
   }
@@ -86,8 +88,9 @@ public class AFKManager {
     player.setMetadata(
         "afk",
         new FixedMetadataValue(EasyAFK.instance, Boolean.FALSE));
-
     Bukkit.getPluginManager().callEvent(new AFKStopEvent(player, state));
+    Hooks.consumeHook("discordsrv", (DiscordSRVHook hook) -> hook.sendMessage(player, false));
+
     AfkEffects.disableAFK(player, state);
   }
 

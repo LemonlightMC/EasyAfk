@@ -9,13 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class AfkCheckTask extends BukkitRunnable {
-  private WorldGuardHook hook;
 
   public void run() {
     final long currentTime = System.currentTimeMillis();
     final boolean isFull = EasyAFK.config.kickEnabledWhenFull &&
         Bukkit.getOnlinePlayers().size() == Bukkit.getMaxPlayers();
-    hook = (WorldGuardHook) Hooks.getHook("worldguard");
 
     for (final Player player : Bukkit.getOnlinePlayers()) {
       if (canBypass(player)) {
@@ -44,6 +42,6 @@ public class AfkCheckTask extends BukkitRunnable {
   private boolean canBypass(final Player p) {
     return EasyAFK.config.bypassAfkEnabled && p.hasPermission("easyafk.bypass.afk") ||
         EasyAFK.config.ignoredWorlds.contains(p.getWorld().getName()) ||
-        hook != null && hook.isInAfkBypassSection(p);
+        Hooks.predicateHook("worldguard", (WorldGuardHook hook) -> hook.isInAfkBypassSection(p));
   }
 }
