@@ -55,13 +55,13 @@ public class EasyAFK extends JavaPlugin {
               DatabaseManager.reload(true);
               animationManager = new AnimationManager(config.configFile, "effects");
               if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
-                TabHook.create();
+                Hooks.createHook(TabHook.class);
               }
               if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-                WorldGuardHook.create();
+                Hooks.createHook(WorldGuardHook.class);
               }
               if (Bukkit.getPluginManager().isPluginEnabled("DiscordSRV")) {
-                DiscordSRVHook.create();
+                Hooks.createHook(DiscordSRVHook.class);
               }
               Hooks.load();
             });

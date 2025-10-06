@@ -71,8 +71,4 @@ public class DiscordSRVHook extends Hook {
     }
     channel.sendMessageEmbeds(embedBuilder.build()).queue();
   }
-
-  public static void create() {
-    new DiscordSRVHook();
-  }
 }

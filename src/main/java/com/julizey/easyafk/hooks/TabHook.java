@@ -14,10 +14,6 @@ public class TabHook extends Hook {
     super("tab");
   }
 
-  public static void create() {
-    new TabHook();
-  }
-
   public void reload() {
     if (!isEnabled) {
       unload();

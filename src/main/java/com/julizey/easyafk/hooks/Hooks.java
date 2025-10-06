@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import com.julizey.easyafk.utils.Text;
+
 public class Hooks {
   private static HashMap<String, Hook> hooks = new HashMap<>(6);
 
@@ -93,6 +95,15 @@ public class Hooks {
     hooks.clear();
   }
 
+  public static void createHook(Class<? extends Hook> hookCls) {
+    try {
+      Hook hook = hookCls.getDeclaredConstructor(hookCls).newInstance();
+      hooks.put(hook.name, hook);
+    } catch (Exception e) {
+      Text.warn("Failed to create hook: " + hookCls.getName());
+    }
+  }
+
   public static abstract class Hook implements IHook {
     private final String name;
     protected boolean isEnabled;
@@ -100,7 +111,6 @@ public class Hooks {
     public Hook(final String name) {
       this.name = name;
       this.isEnabled = true;
-      Hooks.hooks.put(name, this);
     }
 
     public String getName() {

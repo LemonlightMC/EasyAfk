@@ -23,10 +23,6 @@ public class WorldGuardHook extends Hook {
     super("worldguard");
   }
 
-  public static void create() {
-    new TabHook();
-  }
-
   public boolean isInAfkBypassSection(final Player player) {
     if (!isEnabled || platform == null) {
       return false;

@@ -11,6 +11,7 @@ plugins {
 
 repositories {
     mavenLocal()
+    mavenCentral()
     maven {
         url = uri("https://hub.spigotmc.org/nexus/content/groups/public/")
     }
@@ -54,6 +55,7 @@ dependencies {
     compileOnly(libs.org.spigotmc.spigot.api)
     compileOnly(libs.me.clip.placeholderapi)
     compileOnly(libs.com.discordsrv.discordsrv)
+    compileOnly("net.luckperms:api:5.4")
     compileOnly("com.github.NEZNAMY:TAB-API:5.2.1") {
         exclude(group = "com.google.code.gson", module = "gson")
         exclude(group = "com.google.guava", module = "guava")
