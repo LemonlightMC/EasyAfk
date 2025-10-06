@@ -21,7 +21,7 @@ public class AFKKickEvent extends Event {
     return HANDLERS;
   }
 
-  public AFKKickEvent(Player player, AFKState state) {
+  public AFKKickEvent(final Player player, final AFKState state) {
     super(true);
     if (player == null) {
       throw new IllegalArgumentException("Invalid Player");

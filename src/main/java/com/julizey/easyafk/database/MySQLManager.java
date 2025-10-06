@@ -34,7 +34,7 @@ public class MySQLManager implements DatabaseManager.DatabaseProvider {
     }
   }
 
-  public void addAfkPlayer(final UUID playerId, AFKMode mode, final long lastActive) {
+  public void addAfkPlayer(final UUID playerId, final AFKMode mode, final long lastActive) {
     try {
       final PreparedStatement selectStatement = connection.prepareStatement(
           "SELECT COUNT(*) FROM afk_players WHERE player_id = ?");

@@ -21,10 +21,10 @@ public class EasyAFKCommand implements TabExecutor {
   }
 
   public boolean onCommand(
-      CommandSender sender,
-      Command command,
-      String label,
-      String[] args) {
+      final CommandSender sender,
+      final Command command,
+      final String label,
+      final String[] args) {
     Bukkit
         .getScheduler()
         .runTaskAsynchronously(
@@ -38,7 +38,7 @@ public class EasyAFKCommand implements TabExecutor {
     return true;
   }
 
-  private void handleCommand(CommandSender sender, String[] args) {
+  private void handleCommand(final CommandSender sender, final String[] args) {
     if (!(sender instanceof Player)) {
       Text.send(sender, "messages.command-onlyPlayers");
       return;
@@ -69,19 +69,19 @@ public class EasyAFKCommand implements TabExecutor {
                     : "disabled"));
       }
       case "toggle" -> {
-        Player p = getTarget((Player) sender, args);
+        final Player p = getTarget((Player) sender, args);
         if (p == null)
           return;
         EasyAFK.manager.toggleAFK(p, AFKMode.HARD);
       }
       case "enable" -> {
-        Player p = getTarget((Player) sender, args);
+        final Player p = getTarget((Player) sender, args);
         if (p == null)
           return;
         EasyAFK.manager.enableAFK(p, null);
       }
       case "disable" -> {
-        Player p = getTarget((Player) sender, args);
+        final Player p = getTarget((Player) sender, args);
         if (p == null)
           return;
         EasyAFK.manager.disableAFK(p);
@@ -112,8 +112,8 @@ public class EasyAFKCommand implements TabExecutor {
   }
 
   private static boolean checkPermission(
-      CommandSender sender,
-      String permission) {
+      final CommandSender sender,
+      final String permission) {
     if (sender.hasPermission(permission)) {
       return false;
     }
@@ -121,11 +121,11 @@ public class EasyAFKCommand implements TabExecutor {
     return true;
   }
 
-  private static void sendHelp(CommandSender sender) {
+  private static void sendHelp(final CommandSender sender) {
     Text.send(sender, "messages.command-help");
   }
 
-  private Player getTarget(Player sender, String[] args) {
+  private Player getTarget(final Player sender, final String[] args) {
     if (args.length < 2) {
       return sender;
     }
@@ -133,7 +133,7 @@ public class EasyAFKCommand implements TabExecutor {
       Text.send(sender, "messages.command-noPermission");
       return null;
     }
-    Player target = Bukkit.getPlayer(args[1]);
+    final Player target = Bukkit.getPlayer(args[1]);
     if (target != null) {
       return target;
     }
@@ -144,18 +144,18 @@ public class EasyAFKCommand implements TabExecutor {
     return sender;
   }
 
-  private boolean handleCooldown(CommandSender sender) {
-    long now = System.currentTimeMillis();
-    UUID uuid = ((Player) sender).getUniqueId();
+  private boolean handleCooldown(final CommandSender sender) {
+    final long now = System.currentTimeMillis();
+    final UUID uuid = ((Player) sender).getUniqueId();
     if (!cooldowns.containsKey(uuid)) {
       cooldowns.put(uuid, now);
       return false;
     }
-    long lastUsed = cooldowns.get(uuid);
+    final long lastUsed = cooldowns.get(uuid);
     if (now - lastUsed > EasyAFK.config.command_cooldown) {
       return false;
     }
-    long secondsLeft = (EasyAFK.config.command_cooldown - (now - lastUsed)) / 1000 + 1;
+    final long secondsLeft = (EasyAFK.config.command_cooldown - (now - lastUsed)) / 1000 + 1;
     Text.send(
         sender,
         "messages.command-cooldown",
@@ -165,11 +165,11 @@ public class EasyAFKCommand implements TabExecutor {
 
   @Override
   public List<String> onTabComplete(
-      CommandSender sender,
-      Command label,
-      String cmd,
-      String[] args) {
-    ArrayList<String> tabComplete = new ArrayList<>();
+      final CommandSender sender,
+      final Command label,
+      final String cmd,
+      final String[] args) {
+    final ArrayList<String> tabComplete = new ArrayList<>();
 
     if (sender.hasPermission("easyafk.use")) {
       tabComplete.add("help");

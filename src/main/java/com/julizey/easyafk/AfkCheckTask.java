@@ -37,7 +37,7 @@ public class AfkCheckTask extends BukkitRunnable {
     }
   }
 
-  private boolean canBypass(Player p) {
+  private boolean canBypass(final Player p) {
     return EasyAFK.config.bypassAfkEnabled && p.hasPermission("easyafk.bypass.afk") ||
         EasyAFK.config.ignoredWorlds.contains(p.getWorld().getName()) ||
         EasyAFK.instance.worldGuardIntegration != null

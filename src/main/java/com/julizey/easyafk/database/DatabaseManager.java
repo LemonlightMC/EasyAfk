@@ -65,7 +65,7 @@ public class DatabaseManager {
     return provider != null && provider.isConnected();
   }
 
-  public static void addAfkPlayer(final UUID playerId, AFKMode mode, final long lastActive) {
+  public static void addAfkPlayer(final UUID playerId, final AFKMode mode, final long lastActive) {
     if (playerId == null)
       return;
     lastActiveCache.put(playerId, lastActive);
@@ -75,7 +75,7 @@ public class DatabaseManager {
     }
   }
 
-  public static void addAfkPlayer(final UUID playerId, AFKMode mode) {
+  public static void addAfkPlayer(final UUID playerId, final AFKMode mode) {
     if (playerId == null)
       return;
     final long time = System.currentTimeMillis();

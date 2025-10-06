@@ -10,8 +10,8 @@ public class Location {
   public float yaw;
   public float pitch;
 
-  public Location(Player player) {
-    org.bukkit.Location location = player.getLocation();
+  public Location(final Player player) {
+    final org.bukkit.Location location = player.getLocation();
     this.x = location.getX();
     this.y = location.getY();
     this.z = location.getZ();
@@ -19,7 +19,7 @@ public class Location {
     this.pitch = location.getPitch();
   }
 
-  public Location(double x, double y, double z, float yaw, float pitch) {
+  public Location(final double x, final double y, final double z, final float yaw, final float pitch) {
     this.x = x;
     this.y = y;
     this.z = z;

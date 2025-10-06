@@ -45,7 +45,7 @@ public class EasyAFK extends JavaPlugin {
         .registerEvents(new EventListener(), this);
 
     // Command
-    EasyAFKCommand afkCommand = new EasyAFKCommand();
+    final EasyAFKCommand afkCommand = new EasyAFKCommand();
     getCommand("afk").setExecutor(afkCommand);
     getCommand("afk").setTabCompleter(afkCommand);
 
@@ -85,7 +85,7 @@ public class EasyAFK extends JavaPlugin {
     DatabaseManager.close();
   }
 
-  public void reload(boolean full) {
+  public void reload(final boolean full) {
     try {
       saveDefaultConfig();
       reloadConfig();
@@ -105,13 +105,13 @@ public class EasyAFK extends JavaPlugin {
           worldGuardIntegration.reload();
         }
       }
-    } catch (Exception ex) {
+    } catch (final Exception ex) {
       Text.warn("Failed to reload the configs!");
       ex.printStackTrace();
     }
   }
 
-  public void openOverviewGUI(Player p) {
+  public void openOverviewGUI(final Player p) {
     if (!hasRegisteredGUIs) {
       hasRegisteredGUIs = true;
       afkPlayerOverviewGUI = new AfkPlayerOverviewGUI();
@@ -122,7 +122,7 @@ public class EasyAFK extends JavaPlugin {
     afkPlayerOverviewGUI.openGUI(p, 1);
   }
 
-  public void openActionGUI(Player p, Player target) {
+  public void openActionGUI(final Player p, final Player target) {
     if (!hasRegisteredGUIs) {
       hasRegisteredGUIs = true;
       afkPlayerOverviewGUI = new AfkPlayerOverviewGUI();

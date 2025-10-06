@@ -34,7 +34,7 @@ public class AfkEffects {
     EasyAFK.instance.animationManager.play(player, "enable");
   }
 
-  public static void disableAFK(final Player player, AFKState state) {
+  public static void disableAFK(final Player player, final AFKState state) {
     Text.send(player, "messages.unafk");
 
     if (EasyAFK.config.unafkBroadcastEnabled) {

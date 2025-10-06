@@ -43,19 +43,19 @@ public class AFKState {
 
   @Override
   public int hashCode() {
-    int result = 31 + ((mode == null) ? 0 : mode.hashCode());
+    final int result = 31 + ((mode == null) ? 0 : mode.hashCode());
     return 31 * result + (int) (last_active ^ (last_active >>> 32));
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(final Object obj) {
     if (this == obj) {
       return true;
     }
     if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
-    AFKState other = (AFKState) obj;
+    final AFKState other = (AFKState) obj;
     return mode == other.mode && last_active == other.last_active;
   }
 

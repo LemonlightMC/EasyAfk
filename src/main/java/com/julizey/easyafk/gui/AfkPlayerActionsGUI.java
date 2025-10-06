@@ -19,24 +19,24 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class AfkPlayerActionsGUI implements Listener {
 
-  private String title = ChatColor.DARK_GRAY + "Player Actions";
+  private final String title = ChatColor.DARK_GRAY + "Player Actions";
   private static HashMap<UUID, UUID> targetPlayers = new HashMap<>();
 
   public AfkPlayerActionsGUI() {
   }
 
-  public void openGUI(Player opener, Player targetPlayer) {
+  public void openGUI(final Player opener, final Player targetPlayer) {
     targetPlayers.put(opener.getUniqueId(), targetPlayer.getUniqueId());
-    Inventory inventory = Bukkit.createInventory(
+    final Inventory inventory = Bukkit.createInventory(
         (InventoryHolder) null,
         9,
         this.title);
-    ItemStack kickItem = this.createButtonItem(ChatColor.RED + "Kick Player", Material.BARRIER);
-    ItemStack alertItem = this.createButtonItem(ChatColor.YELLOW + "Send Alert", Material.PAPER);
-    ItemStack teleportItem = this.createButtonItem(
+    final ItemStack kickItem = this.createButtonItem(ChatColor.RED + "Kick Player", Material.BARRIER);
+    final ItemStack alertItem = this.createButtonItem(ChatColor.YELLOW + "Send Alert", Material.PAPER);
+    final ItemStack teleportItem = this.createButtonItem(
         ChatColor.GREEN + "Teleport to Player",
         Material.COMPASS);
-    ItemStack toggleAFKItem = this.createButtonItem(ChatColor.YELLOW + "Toggle AFK", Material.PISTON);
+    final ItemStack toggleAFKItem = this.createButtonItem(ChatColor.YELLOW + "Toggle AFK", Material.PISTON);
     inventory.setItem(0, kickItem);
     inventory.setItem(1, alertItem);
     inventory.setItem(2, teleportItem);
@@ -44,31 +44,31 @@ public class AfkPlayerActionsGUI implements Listener {
     opener.openInventory(inventory);
   }
 
-  private ItemStack createButtonItem(String displayName, Material material) {
-    ItemStack item = new ItemStack(material);
-    ItemMeta meta = item.getItemMeta();
+  private ItemStack createButtonItem(final String displayName, final Material material) {
+    final ItemStack item = new ItemStack(material);
+    final ItemMeta meta = item.getItemMeta();
     meta.setDisplayName(displayName);
     item.setItemMeta(meta);
     return item;
   }
 
   @EventHandler
-  public void onInventoryClick(InventoryClickEvent event) {
-    String title = event.getView().getTitle();
+  public void onInventoryClick(final InventoryClickEvent event) {
+    final String title = event.getView().getTitle();
     if (!title.equals(this.title)) {
       return;
     }
     event.setCancelled(true);
-    ItemStack clickedItem = event.getCurrentItem();
-    Player player = (Player) event.getWhoClicked();
-    UUID targetPlayerId = (UUID) targetPlayers.get(player.getUniqueId());
+    final ItemStack clickedItem = event.getCurrentItem();
+    final Player player = (Player) event.getWhoClicked();
+    final UUID targetPlayerId = (UUID) targetPlayers.get(player.getUniqueId());
 
     if (clickedItem == null ||
         clickedItem.getType() == Material.AIR ||
         targetPlayerId == null) {
       return;
     }
-    Player targetPlayer = Bukkit.getPlayer(targetPlayerId);
+    final Player targetPlayer = Bukkit.getPlayer(targetPlayerId);
     if (targetPlayer == null) {
       Text.warn(
           "Could not find target player, probably the player is offline now");

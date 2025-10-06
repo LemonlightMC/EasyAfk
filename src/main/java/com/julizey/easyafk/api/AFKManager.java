@@ -23,7 +23,7 @@ public class AFKManager {
   public long afkTime;
   public long afkTimeIncrease;
   public String tabPrefix;
-  private HashMap<UUID, AFKState> states = new HashMap<UUID, AFKState>();
+  private final HashMap<UUID, AFKState> states = new HashMap<UUID, AFKState>();
 
   public HashMap<UUID, AFKState> getPlayers() {
     return states;
@@ -160,7 +160,7 @@ public class AFKManager {
     return tabPrefix;
   }
 
-  public void setTabPrefix(String tabPrefix) {
+  public void setTabPrefix(final String tabPrefix) {
     this.tabPrefix = Text.convertColor(tabPrefix);
   }
 

@@ -20,7 +20,7 @@ public class AFKStopEvent extends Event {
     return HANDLERS;
   }
 
-  public AFKStopEvent(Player player, AFKState state) {
+  public AFKStopEvent(final Player player, final AFKState state) {
     super(true);
     if (player == null) {
       throw new IllegalArgumentException("Invalid Player");

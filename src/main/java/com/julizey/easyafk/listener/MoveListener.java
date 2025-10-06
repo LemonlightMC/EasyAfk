@@ -23,15 +23,15 @@ public class MoveListener implements Listener {
   }
 
   @EventHandler
-  public void onMove(PlayerMoveEvent event) {
+  public void onMove(final PlayerMoveEvent event) {
     Bukkit
         .getScheduler()
         .runTaskAsynchronously(EasyAFK.instance, () -> handleMoveEvent(event));
   }
 
-  private void handleMoveEvent(PlayerMoveEvent event) {
-    Player player = event.getPlayer();
-    UUID playerId = player.getUniqueId();
+  private void handleMoveEvent(final PlayerMoveEvent event) {
+    final Player player = event.getPlayer();
+    final UUID playerId = player.getUniqueId();
 
     if (performsAntiChecks(player)) {
       return;
@@ -45,7 +45,7 @@ public class MoveListener implements Listener {
     EasyAFK.manager.disableAFK(player);
   }
 
-  public boolean performsAntiChecks(Player player) {
+  public boolean performsAntiChecks(final Player player) {
     if (EasyAFK.config.antiVehicle && player.isInsideVehicle()) {
       return true;
     }
@@ -53,14 +53,14 @@ public class MoveListener implements Listener {
       return true;
     }
 
-    UUID playerId = player.getUniqueId();
-    Location lastLoc = lastLocations.get(playerId);
-    Location currLoc = new Location(player);
+    final UUID playerId = player.getUniqueId();
+    final Location lastLoc = lastLocations.get(playerId);
+    final Location currLoc = new Location(player);
 
     if (EasyAFK.config.antiMicroMove) {
-      double dx = Math.abs(lastLoc.x - currLoc.x);
-      double dy = Math.abs(lastLoc.y - currLoc.y);
-      double dz = Math.abs(lastLoc.z - currLoc.z);
+      final double dx = Math.abs(lastLoc.x - currLoc.x);
+      final double dy = Math.abs(lastLoc.y - currLoc.y);
+      final double dz = Math.abs(lastLoc.z - currLoc.z);
       if (dx < EasyAFK.config.antiMicroMoveDistance &&
           dy < EasyAFK.config.antiMicroMoveDistance &&
           dz < EasyAFK.config.antiMicroMoveDistance) {
@@ -70,8 +70,8 @@ public class MoveListener implements Listener {
     }
 
     if (EasyAFK.config.antiRotationOnly) {
-      double dYaw = Math.abs(lastLoc.yaw - currLoc.yaw);
-      double dPitch = Math.abs(lastLoc.pitch - currLoc.pitch);
+      final double dYaw = Math.abs(lastLoc.yaw - currLoc.yaw);
+      final double dPitch = Math.abs(lastLoc.pitch - currLoc.pitch);
       if (dYaw < EasyAFK.config.antiRotationDistance &&
           dPitch < EasyAFK.config.antiRotationDistance) {
         lastLocations.put(playerId, currLoc.clone());
@@ -80,7 +80,7 @@ public class MoveListener implements Listener {
     }
 
     if (EasyAFK.config.antiJump) {
-      double dy = Math.abs(lastLoc.y - currLoc.y);
+      final double dy = Math.abs(lastLoc.y - currLoc.y);
       if (dy < EasyAFK.config.antiJumpDistance) {
         lastLocations.put(playerId, currLoc.clone());
         return true;
@@ -91,16 +91,16 @@ public class MoveListener implements Listener {
     return false;
   }
 
-  private boolean isInInfiniteWaterFlow(Player player) {
-    Block block = player.getLocation().getBlock();
-    BlockFace[] faces = {
+  private boolean isInInfiniteWaterFlow(final Player player) {
+    final Block block = player.getLocation().getBlock();
+    final BlockFace[] faces = {
         BlockFace.NORTH,
         BlockFace.EAST,
         BlockFace.SOUTH,
         BlockFace.WEST,
     };
-    for (BlockFace face : faces) {
-      Block adjacentBlock = block.getRelative(face);
+    for (final BlockFace face : faces) {
+      final Block adjacentBlock = block.getRelative(face);
       if (adjacentBlock.getType() == Material.WATER &&
           adjacentBlock.getRelative(face).getType() == Material.WATER) {
         return true;

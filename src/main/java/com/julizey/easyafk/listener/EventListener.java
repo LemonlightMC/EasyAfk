@@ -14,9 +14,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class EventListener implements Listener {
   // Cancel damage if the player is Hard AFK
   @EventHandler
-  public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+  public void onEntityDamageByEntity(final EntityDamageByEntityEvent event) {
     if (event.getEntity() instanceof Player) {
-      Player player = (Player) event.getEntity();
+      final Player player = (Player) event.getEntity();
       if (EasyAFK.manager.isAFK(player, AFKMode.HARD)) {
         event.setCancelled(true);
       }
@@ -25,8 +25,8 @@ public class EventListener implements Listener {
 
   // Prevent player from moving while Hard AFK
   @EventHandler
-  public void onPlayerMove(PlayerMoveEvent event) {
-    Player player = event.getPlayer();
+  public void onPlayerMove(final PlayerMoveEvent event) {
+    final Player player = event.getPlayer();
     if (EasyAFK.manager.isAFK(player, AFKMode.HARD)) {
       event.setCancelled(true);
     }
@@ -34,8 +34,8 @@ public class EventListener implements Listener {
 
   // Prevent interaction if Hard AFK
   @EventHandler
-  public void onPlayerInteract(PlayerInteractEvent event) {
-    Player player = event.getPlayer();
+  public void onPlayerInteract(final PlayerInteractEvent event) {
+    final Player player = event.getPlayer();
     if (EasyAFK.manager.isAFK(player)) {
       event.setCancelled(true);
     }
@@ -43,11 +43,11 @@ public class EventListener implements Listener {
 
   // Disable AFK (optionally) if Player Quits
   @EventHandler
-  public void onPlayerQuit(PlayerQuitEvent event) {
+  public void onPlayerQuit(final PlayerQuitEvent event) {
     if (!EasyAFK.config.disableOnLeave) {
       return;
     }
-    Player player = event.getPlayer();
+    final Player player = event.getPlayer();
     if (EasyAFK.manager.isAFK(player)) {
       EasyAFK.manager.disableAFK(player);
     }
