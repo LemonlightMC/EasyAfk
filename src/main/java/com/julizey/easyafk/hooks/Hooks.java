@@ -130,16 +130,12 @@ public class Hooks {
     }
 
     @Override
-    public void reload() {
-    }
+    abstract public void reload();
 
     @Override
-    public void unload() {
-    }
+    abstract public void unload();
 
     @Override
-    public void load() {
-      reload();
-    }
+    abstract public void load();
   }
 }

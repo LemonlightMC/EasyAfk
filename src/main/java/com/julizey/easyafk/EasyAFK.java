@@ -63,6 +63,9 @@ public class EasyAFK extends JavaPlugin {
               if (Bukkit.getPluginManager().isPluginEnabled("DiscordSRV")) {
                 Hooks.createHook(DiscordSRVHook.class);
               }
+              if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                Hooks.createHook(PAPIHook.class);
+              }
               Hooks.load();
             });
 
