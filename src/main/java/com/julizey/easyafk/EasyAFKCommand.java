@@ -15,7 +15,8 @@ import org.bukkit.util.StringUtil;
 
 public class EasyAFKCommand implements TabExecutor {
 
-  public static HashMap<UUID, Long> cooldowns = new HashMap<>();
+  private static HashMap<UUID, Long> cooldowns = new HashMap<>();
+  private static HashMap<UUID, String> reasons = new HashMap<>();
 
   public EasyAFKCommand() {
   }
@@ -39,62 +40,70 @@ public class EasyAFKCommand implements TabExecutor {
   }
 
   private void handleCommand(final CommandSender sender, final String[] args) {
-    if (!(sender instanceof Player)) {
+    if (sender == null || !(sender instanceof Player)) {
       Text.send(sender, "messages.command-onlyPlayers");
       return;
     }
-    if (checkPermission(sender, "easyafk.use")) {
+    Player player = (Player) sender;
+    if (checkPermission(player, "easyafk.use")) {
       return;
     }
-    if (handleCooldown(sender)) {
+    if (handleCooldown(player)) {
       return;
     }
     if (args.length == 0) {
-      EasyAFK.manager.toggleAFK((Player) sender, AFKMode.HARD);
+      EasyAFK.manager.toggleAFK(player, AFKMode.HARD);
       return;
     }
 
     switch (args[0].toLowerCase()) {
       case "help" -> {
-        sendHelp(sender);
+        sendHelp(player);
       }
       case "status" -> {
         Text.send(
-            sender,
+            player,
             "messages.command-status",
             new Text.Replaceable(
                 "%status%",
-                EasyAFK.manager.isAFK((Player) sender)
+                EasyAFK.manager.isAFK(player)
                     ? "enabled"
                     : "disabled"));
       }
       case "toggle" -> {
-        final Player p = getTarget((Player) sender, args);
+        final Player p = getTarget(player, args);
         if (p == null)
           return;
         EasyAFK.manager.toggleAFK(p, AFKMode.HARD);
       }
       case "enable" -> {
-        final Player p = getTarget((Player) sender, args);
+        final Player p = getTarget(player, args);
         if (p == null)
           return;
         EasyAFK.manager.enableAFK(p, null);
       }
       case "disable" -> {
-        final Player p = getTarget((Player) sender, args);
+        final Player p = getTarget(player, args);
         if (p == null)
           return;
         EasyAFK.manager.disableAFK(p);
       }
+      case "reason" -> {
+        String reason = "";
+        for (int i = 0; i < args.length; i++) {
+          reason += args[i];
+        }
+        reasons.put(player.getUniqueId(), reason);
+      }
       case "reload" -> {
-        if (!checkPermission(sender, "easyafk.admin")) {
+        if (!checkPermission(player, "easyafk.admin")) {
           return;
         }
         EasyAFK.instance.reload();
-        Text.send(sender, "Config reloaded.");
+        Text.send(player, "Config reloaded.");
       }
       case "overview" -> {
-        if (!checkPermission(sender, "easyafk.admin")) {
+        if (!checkPermission(player, "easyafk.admin")) {
           return;
         }
         Bukkit
@@ -102,35 +111,35 @@ public class EasyAFKCommand implements TabExecutor {
             .runTask(
                 EasyAFK.instance,
                 () -> {
-                  EasyAFK.instance.openOverviewGUI((Player) sender);
+                  EasyAFK.instance.openOverviewGUI(player);
                 });
       }
       default -> {
-        Text.send(sender, "messages.command-unknown");
+        Text.send(player, "messages.command-unknown");
       }
     }
   }
 
   private static boolean checkPermission(
-      final CommandSender sender,
+      final Player player,
       final String permission) {
-    if (sender.hasPermission(permission)) {
+    if (player.hasPermission(permission)) {
       return false;
     }
-    Text.send(sender, "messages.command-noPermission");
+    Text.send(player, "messages.command-noPermission");
     return true;
   }
 
-  private static void sendHelp(final CommandSender sender) {
-    Text.send(sender, "messages.command-help");
+  private static void sendHelp(final Player player) {
+    Text.send(player, "messages.command-help");
   }
 
-  private Player getTarget(final Player sender, final String[] args) {
+  private static Player getTarget(final Player player, final String[] args) {
     if (args.length < 2) {
-      return sender;
+      return player;
     }
-    if (!checkPermission(sender, "easyafk.admin")) {
-      Text.send(sender, "messages.command-noPermission");
+    if (!checkPermission(player, "easyafk.admin")) {
+      Text.send(player, "messages.command-noPermission");
       return null;
     }
     final Player target = Bukkit.getPlayer(args[1]);
@@ -138,15 +147,15 @@ public class EasyAFKCommand implements TabExecutor {
       return target;
     }
     Text.send(
-        sender,
+        player,
         "messages.command-playerNotFound",
         new Text.Replaceable("%player%", args[1]));
-    return sender;
+    return player;
   }
 
-  private boolean handleCooldown(final CommandSender sender) {
+  private static boolean handleCooldown(final Player player) {
     final long now = System.currentTimeMillis();
-    final UUID uuid = ((Player) sender).getUniqueId();
+    final UUID uuid = (player).getUniqueId();
     if (!cooldowns.containsKey(uuid)) {
       cooldowns.put(uuid, now);
       return false;
@@ -157,7 +166,7 @@ public class EasyAFKCommand implements TabExecutor {
     }
     final long secondsLeft = (EasyAFK.config.command_cooldown - (now - lastUsed)) / 1000 + 1;
     Text.send(
-        sender,
+        player,
         "messages.command-cooldown",
         new Text.Replaceable("%time%", String.valueOf(secondsLeft)));
     return true;
