@@ -1,6 +1,7 @@
 package com.julizey.easyafk;
 
 import com.julizey.easyafk.api.AFKState.AFKMode;
+import com.julizey.easyafk.api.AFKStopEvent.AFKStopReason;
 import com.julizey.easyafk.utils.Text;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,7 +87,7 @@ public class EasyAFKCommand implements TabExecutor {
         final Player p = getTarget(player, args);
         if (p == null)
           return;
-        EasyAFK.manager.disableAFK(p);
+        EasyAFK.manager.disableAFK(p, AFKStopReason.TOGGLED);
       }
       case "reason" -> {
         String reason = "";

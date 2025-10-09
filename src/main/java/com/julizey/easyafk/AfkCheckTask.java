@@ -1,5 +1,6 @@
 package com.julizey.easyafk;
 
+import com.julizey.easyafk.api.AFKKickEvent.AFKKickReason;
 import com.julizey.easyafk.api.AFKState.AFKMode;
 import com.julizey.easyafk.database.DatabaseManager;
 import com.julizey.easyafk.hooks.Hooks;
@@ -31,7 +32,7 @@ public class AfkCheckTask extends BukkitRunnable {
         if (EasyAFK.config.kickEnabled && (isFull || currentTime - lastActive > EasyAFK.config.kickTimeout)) {
           Bukkit
               .getScheduler()
-              .runTask(EasyAFK.instance, () -> EasyAFK.manager.kickPlayer(player));
+              .runTask(EasyAFK.instance, () -> EasyAFK.manager.kickPlayer(player, AFKKickReason.TOO_LONG_AFK));
         }
       } else if (!EasyAFK.manager.isAFK(player.getUniqueId())) {
         EasyAFK.manager.enableAFK(player, AFKMode.SOFT);

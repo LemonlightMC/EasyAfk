@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.julizey.easyafk.EasyAFK;
+import com.julizey.easyafk.api.AFKKickEvent.AFKKickReason;
 import com.julizey.easyafk.api.AFKState.AFKMode;
+import com.julizey.easyafk.api.AFKStopEvent.AFKStopReason;
 import com.julizey.easyafk.database.DatabaseManager;
 import com.julizey.easyafk.hooks.DiscordSRVHook;
 import com.julizey.easyafk.hooks.Hooks;
@@ -35,14 +37,14 @@ public class AFKManager {
     if (isAFK && !current) {
       enableAFK(player, mode);
     } else if (!isAFK && current) {
-      disableAFK(player);
+      disableAFK(player, AFKStopReason.TOGGLED);
     }
   }
 
   public void toggleAFK(final Player player, final AFKMode mode) {
     final boolean current = isAFK(player);
     if (current) {
-      disableAFK(player);
+      disableAFK(player, AFKStopReason.TOGGLED);
     } else {
       enableAFK(player, mode);
     }
@@ -79,7 +81,7 @@ public class AFKManager {
     AfkEffects.enableAFK(player);
   }
 
-  public void disableAFK(final Player player) {
+  public void disableAFK(final Player player, AFKStopReason reason) {
     final UUID playerId = player.getUniqueId();
     final AFKState state = states.get(playerId);
     states.remove(playerId);
@@ -88,13 +90,13 @@ public class AFKManager {
     player.setMetadata(
         "afk",
         new FixedMetadataValue(EasyAFK.instance, Boolean.FALSE));
-    Bukkit.getPluginManager().callEvent(new AFKStopEvent(player, state));
+    Bukkit.getPluginManager().callEvent(new AFKStopEvent(player, state, reason));
     Hooks.consumeHook("discordsrv", (DiscordSRVHook hook) -> hook.sendMessage(player, false));
 
     AfkEffects.disableAFK(player, state);
   }
 
-  public void kickPlayer(final Player p) {
+  public void kickPlayer(final Player p, AFKKickReason reason) {
     if (EasyAFK.config.bypassKickEnabled && p.hasPermission("easyafk.bypass.kick")) {
       return;
     }
@@ -109,7 +111,7 @@ public class AFKManager {
           new FixedMetadataValue(EasyAFK.instance, Boolean.FALSE));
     }
 
-    Bukkit.getPluginManager().callEvent(new AFKKickEvent(p, state));
+    Bukkit.getPluginManager().callEvent(new AFKKickEvent(p, state, reason));
     DatabaseManager.updateLastActive(playerId, -1);
     p.kickPlayer(
         Text.format(

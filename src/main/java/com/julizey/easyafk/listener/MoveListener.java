@@ -1,6 +1,7 @@
 package com.julizey.easyafk.listener;
 
 import com.julizey.easyafk.EasyAFK;
+import com.julizey.easyafk.api.AFKStopEvent.AFKStopReason;
 import com.julizey.easyafk.database.DatabaseManager;
 import com.julizey.easyafk.utils.Location;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class MoveListener implements Listener {
         !EasyAFK.manager.isAFK(playerId)) {
       return;
     }
-    EasyAFK.manager.disableAFK(player);
+    EasyAFK.manager.disableAFK(player, AFKStopReason.MOVED);
   }
 
   public boolean performsAntiChecks(final Player player) {

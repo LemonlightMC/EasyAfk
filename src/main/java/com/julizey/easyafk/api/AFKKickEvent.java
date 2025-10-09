@@ -1,5 +1,7 @@
 package com.julizey.easyafk.api;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -8,7 +10,7 @@ public class AFKKickEvent extends Event {
 
   private final Player player;
   private final long duration;
-  private final String reason;
+  private final AFKKickReason reason;
 
   private static final HandlerList HANDLERS = new HandlerList();
 
@@ -21,7 +23,7 @@ public class AFKKickEvent extends Event {
     return HANDLERS;
   }
 
-  public AFKKickEvent(final Player player, final AFKState state) {
+  public AFKKickEvent(final Player player, final AFKState state, AFKKickReason reason) {
     super(true);
     if (player == null) {
       throw new IllegalArgumentException("Invalid Player");
@@ -31,7 +33,7 @@ public class AFKKickEvent extends Event {
     }
     this.player = player;
     this.duration = System.currentTimeMillis() - state.getLastActive();
-    this.reason = "";
+    this.reason = reason;
   }
 
   public Player getPlayer() {
@@ -42,8 +44,16 @@ public class AFKKickEvent extends Event {
     return duration;
   }
 
-  public String getReason() {
+  public AFKKickReason getReason() {
     return reason;
+  }
+
+  public Location getLocation() {
+    return player.getLocation();
+  }
+
+  public World getWorld() {
+    return player.getWorld();
   }
 
   @Override
@@ -73,4 +83,20 @@ public class AFKKickEvent extends Event {
     return "AFKKickEvent [player=" + player + ", duration=" + duration + ", reason=" + reason + "]";
   }
 
+  public static enum AFKKickReason {
+    KICKED("Kicked"),
+    DISCONNECT("Disconnected"),
+    TOO_LONG_AFK("Too long AFK"),
+    SERVER_FULL("Server was full");
+
+    private String message;
+
+    private AFKKickReason(String message) {
+      this.message = message;
+    }
+
+    public String getMessage() {
+      return message;
+    }
+  }
 }

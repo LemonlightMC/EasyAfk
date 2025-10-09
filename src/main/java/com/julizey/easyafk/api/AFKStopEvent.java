@@ -1,5 +1,7 @@
 package com.julizey.easyafk.api;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -8,7 +10,7 @@ public class AFKStopEvent extends Event {
 
   private final Player player;
   private final long duration;
-  private final String reason;
+  private final AFKStopReason reason;
   private static final HandlerList HANDLERS = new HandlerList();
 
   public static HandlerList getHandlerList() {
@@ -20,7 +22,7 @@ public class AFKStopEvent extends Event {
     return HANDLERS;
   }
 
-  public AFKStopEvent(final Player player, final AFKState state) {
+  public AFKStopEvent(final Player player, final AFKState state, AFKStopReason reason) {
     super(true);
     if (player == null) {
       throw new IllegalArgumentException("Invalid Player");
@@ -30,7 +32,7 @@ public class AFKStopEvent extends Event {
     }
     this.player = player;
     this.duration = System.currentTimeMillis() - state.getLastActive();
-    this.reason = "";
+    this.reason = reason;
   }
 
   public Player getPlayer() {
@@ -41,8 +43,16 @@ public class AFKStopEvent extends Event {
     return duration;
   }
 
-  public String getReason() {
+  public AFKStopReason getReason() {
     return reason;
+  }
+
+  public Location getLocation() {
+    return player.getLocation();
+  }
+
+  public World getWorld() {
+    return player.getWorld();
   }
 
   @Override
@@ -70,5 +80,25 @@ public class AFKStopEvent extends Event {
   @Override
   public String toString() {
     return "AFKStopEvent [player=" + player + ", duration=" + duration + ", reason=" + reason + "]";
+  }
+
+  public static enum AFKStopReason {
+    OVERRIDE("Override"),
+    DISCONNECT("Disconnected"),
+    TOGGLED("Toggled"),
+    MOVED("Moved"),
+    INTERACTION("Interaction"),
+    PLACED("Placed Block"),
+    BREAK("Broke Block");
+
+    private String message;
+
+    private AFKStopReason(String message) {
+      this.message = message;
+    }
+
+    public String getMessage() {
+      return message;
+    }
   }
 }

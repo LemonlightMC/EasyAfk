@@ -1,6 +1,7 @@
 package com.julizey.easyafk.gui;
 
 import com.julizey.easyafk.EasyAFK;
+import com.julizey.easyafk.api.AFKKickEvent.AFKKickReason;
 import com.julizey.easyafk.api.AFKState.AFKMode;
 import com.julizey.easyafk.utils.Text;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class AfkPlayerActionsGUI implements Listener {
     }
 
     if (AfkPlayerOverviewGUI.isButton(clickedItem, kickItemTitle, Material.BARRIER)) {
-      EasyAFK.manager.kickPlayer(targetPlayer);
+      EasyAFK.manager.kickPlayer(targetPlayer, AFKKickReason.KICKED);
       player.sendMessage(
           ChatColor.GREEN + "Successfully kicked " + targetPlayer.getName());
       player.closeInventory();

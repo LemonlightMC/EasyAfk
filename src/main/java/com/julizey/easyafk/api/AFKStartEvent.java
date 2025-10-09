@@ -1,5 +1,7 @@
 package com.julizey.easyafk.api;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -35,6 +37,14 @@ public class AFKStartEvent extends Event {
 
   public long getTime() {
     return time;
+  }
+
+  public Location getLocation() {
+    return player.getLocation();
+  }
+
+  public World getWorld() {
+    return player.getWorld();
   }
 
   @Override

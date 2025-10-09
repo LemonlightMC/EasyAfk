@@ -2,6 +2,7 @@ package com.julizey.easyafk.listener;
 
 import com.julizey.easyafk.EasyAFK;
 import com.julizey.easyafk.api.AFKState.AFKMode;
+import com.julizey.easyafk.api.AFKStopEvent.AFKStopReason;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,7 +50,7 @@ public class EventListener implements Listener {
     }
     final Player player = event.getPlayer();
     if (EasyAFK.manager.isAFK(player)) {
-      EasyAFK.manager.disableAFK(player);
+      EasyAFK.manager.disableAFK(player, AFKStopReason.DISCONNECT);
     }
   }
 }
