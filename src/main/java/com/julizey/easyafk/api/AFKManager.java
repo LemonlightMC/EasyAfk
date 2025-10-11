@@ -70,18 +70,20 @@ public class AFKManager {
 
   public void enableAFK(final Player player, final AFKMode mode) {
     final UUID playerId = player.getUniqueId();
-    states.put(playerId, new AFKState(mode, System.currentTimeMillis()));
+    final AFKState state = new AFKState(mode, System.currentTimeMillis());
+
+    states.put(playerId, state);
     DatabaseManager.addAfkPlayer(playerId, mode);
     player.setMetadata(
         "afk",
         new FixedMetadataValue(EasyAFK.instance, mode));
     Bukkit.getPluginManager().callEvent(new AFKStartEvent(player));
-    Hooks.consumeHook("discordsrv", (DiscordSRVHook hook) -> hook.sendMessage(player, true));
+    Hooks.consumeHook("discordsrv", (final DiscordSRVHook hook) -> hook.sendMessage(player, true));
 
-    AfkEffects.enableAFK(player);
+    AfkEffects.enableAFK(player, state);
   }
 
-  public void disableAFK(final Player player, AFKStopReason reason) {
+  public void disableAFK(final Player player, final AFKStopReason reason) {
     final UUID playerId = player.getUniqueId();
     final AFKState state = states.get(playerId);
     states.remove(playerId);
@@ -91,12 +93,12 @@ public class AFKManager {
         "afk",
         new FixedMetadataValue(EasyAFK.instance, Boolean.FALSE));
     Bukkit.getPluginManager().callEvent(new AFKStopEvent(player, state, reason));
-    Hooks.consumeHook("discordsrv", (DiscordSRVHook hook) -> hook.sendMessage(player, false));
+    Hooks.consumeHook("discordsrv", (final DiscordSRVHook hook) -> hook.sendMessage(player, false));
 
     AfkEffects.disableAFK(player, state);
   }
 
-  public void kickPlayer(final Player p, AFKKickReason reason) {
+  public void kickPlayer(final Player p, final AFKKickReason reason) {
     if (EasyAFK.config.bypassKickEnabled && p.hasPermission("easyafk.bypass.kick")) {
       return;
     }
@@ -205,7 +207,7 @@ public class AFKManager {
     return channelId;
   }
 
-  public void setDiscordChannel(String channelId) {
+  public void setDiscordChannel(final String channelId) {
     this.channelId = channelId;
   }
 }

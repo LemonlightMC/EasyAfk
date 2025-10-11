@@ -1,11 +1,13 @@
 package com.julizey.easyafk.utils;
 
 import com.julizey.easyafk.EasyAFK;
+import com.julizey.easyafk.api.AFKState.AFKMode;
 import com.julizey.easyafk.hooks.Hooks;
 
 import java.nio.file.Path;
 import java.util.List;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class Config {
@@ -46,17 +48,17 @@ public class Config {
   public double antiMicroJumpDistance;
 
   // afk/unafk
-  public String afkTitle;
-  public boolean afkTitleEnabled;
-  public String afkSubtitle;
-  public boolean afkSubTitleEnabled;
-  public boolean afkBroadcastEnabled;
+  public AFKModeConfig afkSoft;
+  public AFKModeConfig afkHard;
+  public AFKModeConfig afkFake;
+  public AFKModeConfig unafkSoft;
+  public AFKModeConfig unafkHard;
+  public AFKModeConfig unafkFake;
 
-  public String unafkTitle;
-  public boolean unafkTitleEnabled;
+  public String afkTitle;
+  public String afkSubtitle;
   public String unafkSubtitle;
-  public boolean unafkSubTitleEnabled;
-  public boolean unafkBroadcastEnabled;
+  public String unafkTitle;
 
   // integrations
   public String discordAvatarURL;
@@ -72,6 +74,38 @@ public class Config {
   public String username;
   public String password;
   public int port;
+
+  public static class AFKModeConfig {
+
+    public final boolean disableOnMove;
+    public final boolean disableOnPlace;
+    public final boolean disableOnBreak;
+    public final boolean disableOnInteract;
+    public final boolean disableOnDamage;
+    public final boolean effects;
+    public final boolean message;
+    public final boolean broadcast;
+    public final boolean title;
+    public final boolean subTitle;
+    public final boolean discord;
+    public final boolean supportsDisable;
+
+    public AFKModeConfig(final ConfigurationSection section, final boolean supportsDisable) {
+      disableOnMove = section.getBoolean("disableOnMove", false);
+      disableOnPlace = section.getBoolean("disableOnPlace", false);
+      disableOnBreak = section.getBoolean("disableOnBreak", false);
+      disableOnInteract = section.getBoolean("disableOnInteract", false);
+      disableOnDamage = section.getBoolean("disableOnDamage", false);
+      effects = section.getBoolean("effects", true);
+      broadcast = section.getBoolean("broadcast", false);
+      message = section.getBoolean("message", true);
+      title = section.getBoolean("title", true);
+      subTitle = section.getBoolean("subTitle", true);
+      discord = section.getBoolean("discord", true);
+      this.supportsDisable = supportsDisable;
+    }
+
+  }
 
   public Config(final FileConfiguration config) {
     reload(config);
@@ -114,17 +148,17 @@ public class Config {
     antiMicroJumpDistance = configFile.getDouble("checker.anti.microJumpDistance", 0.4d);
 
     // afk effects
+    afkSoft = new AFKModeConfig(configFile.getConfigurationSection("afk.soft"), true);
+    afkHard = new AFKModeConfig(configFile.getConfigurationSection("afk.hard"), true);
+    afkFake = new AFKModeConfig(configFile.getConfigurationSection("afk.fake"), true);
+    unafkSoft = new AFKModeConfig(configFile.getConfigurationSection("unafk.soft"), false);
+    unafkHard = new AFKModeConfig(configFile.getConfigurationSection("unafk.hard"), false);
+    unafkFake = new AFKModeConfig(configFile.getConfigurationSection("unafk.fake"), false);
+
     afkTitle = Text.format("messages.afk-title", true, false);
     afkSubtitle = Text.format("messages.afk-subtitle", true, false);
-    afkTitleEnabled = configFile.getBoolean("afk.title", true);
-    afkSubTitleEnabled = configFile.getBoolean("afk.subtitle", true);
-    afkBroadcastEnabled = configFile.getBoolean("afk.broadcast", false);
-
     unafkTitle = Text.format("messages.unafk-title", true, false);
     unafkSubtitle = Text.format("messages.unafk-subtitle", true, false);
-    unafkTitleEnabled = configFile.getBoolean("unafk.title", true);
-    unafkSubTitleEnabled = configFile.getBoolean("unafk.subtitle", true);
-    unafkBroadcastEnabled = configFile.getBoolean("unafk.broadcast", false);
 
     // integrations
     if (configFile.getBoolean("integration.worldguard", true)) {
@@ -163,5 +197,28 @@ public class Config {
       throw new IllegalArgumentException(
           "Invalid database type: " + databaseType);
     }
+  }
+
+  public AFKModeConfig getModeConfig(final boolean enablingAFK, final AFKMode mode) {
+    if (enablingAFK) {
+      switch (mode) {
+        case AFKMode.SOFT:
+          return afkSoft;
+        case AFKMode.HARD:
+          return afkHard;
+        case AFKMode.FAKE:
+          return afkFake;
+      }
+    } else {
+      switch (mode) {
+        case AFKMode.SOFT:
+          return unafkSoft;
+        case AFKMode.HARD:
+          return unafkHard;
+        case AFKMode.FAKE:
+          return unafkFake;
+      }
+    }
+    return null;
   }
 }

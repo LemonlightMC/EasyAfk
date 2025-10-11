@@ -5,14 +5,18 @@ import org.bukkit.entity.Player;
 
 import com.julizey.easyafk.EasyAFK;
 import com.julizey.easyafk.api.AFKState;
+import com.julizey.easyafk.utils.Config.AFKModeConfig;
 import com.julizey.easyafk.utils.Text.Replaceable;
 
 public class AfkEffects {
 
-  public static void enableAFK(final Player player) {
-    Text.send(player, "messages.afk");
+  public static void enableAFK(final Player player, final AFKState state) {
+    final AFKModeConfig modeConfig = EasyAFK.config.getModeConfig(true, state.getMode());
 
-    if (EasyAFK.config.afkBroadcastEnabled) {
+    if (modeConfig.message) {
+      Text.send(player, "messages.afk");
+    }
+    if (modeConfig.broadcast) {
       final String msg = Text.format(
           "messages.afk-broadcast",
           true,
@@ -23,7 +27,7 @@ public class AfkEffects {
       }
     }
 
-    if (EasyAFK.config.afkTitleEnabled) {
+    if (modeConfig.title) {
       player.sendTitle(
           EasyAFK.config.afkTitle,
           EasyAFK.config.afkSubtitle,
@@ -31,13 +35,18 @@ public class AfkEffects {
           70,
           20);
     }
-    EasyAFK.instance.animationManager.play(player, "enable");
+    if (modeConfig.effects) {
+      EasyAFK.instance.animationManager.play(player, "enable");
+    }
   }
 
   public static void disableAFK(final Player player, final AFKState state) {
-    Text.send(player, "messages.unafk");
+    final AFKModeConfig modeConfig = EasyAFK.config.getModeConfig(false, state.getMode());
 
-    if (EasyAFK.config.unafkBroadcastEnabled) {
+    if (modeConfig.message) {
+      Text.send(player, "messages.unafk");
+    }
+    if (modeConfig.broadcast) {
       final String msg = Text.format(
           "messages.unafk-broadcast",
           true,
@@ -48,7 +57,7 @@ public class AfkEffects {
       }
     }
 
-    if (EasyAFK.config.unafkTitleEnabled) {
+    if (modeConfig.title) {
       player.sendTitle(
           EasyAFK.config.unafkTitle,
           EasyAFK.config.unafkSubtitle,
@@ -56,7 +65,8 @@ public class AfkEffects {
           70,
           20);
     }
-    EasyAFK.instance.animationManager.play(player, "disable");
-
+    if (modeConfig.effects) {
+      EasyAFK.instance.animationManager.play(player, "disable");
+    }
   }
 }

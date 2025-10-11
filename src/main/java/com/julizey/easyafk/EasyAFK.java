@@ -53,7 +53,7 @@ public class EasyAFK extends JavaPlugin {
             EasyAFK.instance,
             () -> {
               DatabaseManager.reload(true);
-              animationManager = new AnimationManager(config.configFile, "effects");
+              animationManager = new AnimationManager("effects");
               if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
                 Hooks.createHook(TabHook.class);
               }
