@@ -3,7 +3,8 @@ package com.julizey.easyafk.api;
 public class AFKState {
   public static enum AFKMode {
     SOFT,
-    HARD;
+    HARD,
+    FAKE;
 
     private AFKMode() {
     }
