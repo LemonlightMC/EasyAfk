@@ -7,12 +7,54 @@ import com.julizey.easyafk.api.AFKStopEvent.AFKStopReason;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class EventListener implements Listener {
+
+  // Prevent interaction if Hard AFK
+  @EventHandler
+  public void onPlayerInteract(final PlayerInteractEvent event) {
+    final Player player = event.getPlayer();
+    if (EasyAFK.manager.isAFK(player, AFKMode.HARD)) {
+      event.setCancelled(true);
+    }
+  }
+
+  // Disable AFK (optionally) if Player Quits
+  @EventHandler
+  public void onPlayerQuit(final PlayerQuitEvent event) {
+    if (!EasyAFK.config.disableOnLeave) {
+      return;
+    }
+    final Player player = event.getPlayer();
+    if (EasyAFK.manager.isAFK(player)) {
+      EasyAFK.manager.disableAFK(player, AFKStopReason.DISCONNECT);
+    }
+  }
+
+  // Cancel block placing if the player is Hard AFK
+  @EventHandler
+  public void onBlockPlace(BlockPlaceEvent event) {
+    final Player player = event.getPlayer();
+    if (EasyAFK.manager.isAFK(player, AFKMode.HARD)) {
+      event.setCancelled(true);
+    }
+  }
+
+  // Cancel block breaking if the player is Hard AFK
+  @EventHandler
+  public void onBlockPlace(BlockBreakEvent event) {
+    final Player player = event.getPlayer();
+    if (EasyAFK.manager.isAFK(player, AFKMode.HARD)) {
+      event.setCancelled(true);
+    }
+  }
+
   // Cancel damage if the player is Hard AFK
   @EventHandler
   public void onEntityDamageByEntity(final EntityDamageByEntityEvent event) {
@@ -30,27 +72,6 @@ public class EventListener implements Listener {
     final Player player = event.getPlayer();
     if (EasyAFK.manager.isAFK(player, AFKMode.HARD)) {
       event.setCancelled(true);
-    }
-  }
-
-  // Prevent interaction if Hard AFK
-  @EventHandler
-  public void onPlayerInteract(final PlayerInteractEvent event) {
-    final Player player = event.getPlayer();
-    if (EasyAFK.manager.isAFK(player)) {
-      event.setCancelled(true);
-    }
-  }
-
-  // Disable AFK (optionally) if Player Quits
-  @EventHandler
-  public void onPlayerQuit(final PlayerQuitEvent event) {
-    if (!EasyAFK.config.disableOnLeave) {
-      return;
-    }
-    final Player player = event.getPlayer();
-    if (EasyAFK.manager.isAFK(player)) {
-      EasyAFK.manager.disableAFK(player, AFKStopReason.DISCONNECT);
     }
   }
 }

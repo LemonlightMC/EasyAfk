@@ -34,7 +34,7 @@ public class MoveListener implements Listener {
     final Player player = event.getPlayer();
     final UUID playerId = player.getUniqueId();
 
-    if (performsAntiChecks(player)) {
+    if (EasyAFK.config.antiEnabled && performsAntiChecks(player)) {
       return;
     }
 
@@ -58,31 +58,19 @@ public class MoveListener implements Listener {
     final Location lastLoc = lastLocations.get(playerId);
     final Location currLoc = new Location(player);
 
-    if (EasyAFK.config.antiMicroMove) {
-      final double dx = Math.abs(lastLoc.x - currLoc.x);
-      final double dy = Math.abs(lastLoc.y - currLoc.y);
-      final double dz = Math.abs(lastLoc.z - currLoc.z);
+    final double dx = Math.abs(lastLoc.x - currLoc.x);
+    final double dy = Math.abs(lastLoc.y - currLoc.y);
+    final double dz = Math.abs(lastLoc.z - currLoc.z);
+    final double dYaw = Math.abs(lastLoc.yaw - currLoc.yaw);
+    final double dPitch = Math.abs(lastLoc.pitch - currLoc.pitch);
+
+    if (EasyAFK.config.antiMicro) {
       if (dx < EasyAFK.config.antiMicroMoveDistance &&
           dy < EasyAFK.config.antiMicroMoveDistance &&
-          dz < EasyAFK.config.antiMicroMoveDistance) {
-        lastLocations.put(playerId, currLoc.clone());
-        return true;
-      }
-    }
-
-    if (EasyAFK.config.antiRotationOnly) {
-      final double dYaw = Math.abs(lastLoc.yaw - currLoc.yaw);
-      final double dPitch = Math.abs(lastLoc.pitch - currLoc.pitch);
-      if (dYaw < EasyAFK.config.antiRotationDistance &&
-          dPitch < EasyAFK.config.antiRotationDistance) {
-        lastLocations.put(playerId, currLoc.clone());
-        return true;
-      }
-    }
-
-    if (EasyAFK.config.antiJump) {
-      final double dy = Math.abs(lastLoc.y - currLoc.y);
-      if (dy < EasyAFK.config.antiJumpDistance) {
+          dz < EasyAFK.config.antiMicroMoveDistance &&
+          dYaw < EasyAFK.config.antiMicroRotationDistance &&
+          dPitch < EasyAFK.config.antiMicroRotationDistance &&
+          dy < EasyAFK.config.antiMicroJumpDistance) {
         lastLocations.put(playerId, currLoc.clone());
         return true;
       }

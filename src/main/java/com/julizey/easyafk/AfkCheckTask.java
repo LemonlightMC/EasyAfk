@@ -21,8 +21,7 @@ public class AfkCheckTask extends BukkitRunnable {
         continue;
       }
 
-      final long lastActive = DatabaseManager.getLastActive(
-          player.getUniqueId());
+      final long lastActive = DatabaseManager.getLastActive(player.getUniqueId());
       if (lastActive <= 0) {
         DatabaseManager.updateLastActive(player.getUniqueId(), currentTime);
         continue;

@@ -4,24 +4,33 @@ prefix: "&7[&b&lAFK&7]&r"
 # check for AFK every x seconds
 checker:
   enabled: true
-  interval: 1
+  # the interval to run the checker in ticks (default: 20)
+  interval: 20
+  # also use aggressive checking (default: true)
+  aggressive-enabled: true
+  # the interval to run the aggressive checker in ticks (default: 200)
+  aggressive-interval: 200
+  # how of the interval should be used to spread out the checking
+  # for all players in ticks (default: 4)
+  tickSpreading: 4
 
-# Prevent players from bypassing AFK
-anti:
-  infinite-waterflow: false
-  infinite-vehicle: false
+  # Ignore AFK detection in these worlds
+  ignored-worlds:
+    - some_world
 
-  blockPlace: false
-  blockBreak: false
+  # Prevent players from bypassing AFK
+  anti-afk:
+    enabled: true
 
-  microMove: false
-  microMoveDistance: 0.1
+    infinite-waterflow: false
+    infinite-vehicle: false
+    blockPlace: false
+    blockBreak: false
 
-  rotationOnly: false
-  rotationDistance: 10.0
-
-  jump: false
-  jumpDistance: 2
+    micro: false
+    microMoveDistance: 0.2
+    microRotationDistance: 10.0
+    microJumpDistance: 0.4
 
 # Bypass AFK mode
 bypass-afk: true
@@ -33,10 +42,6 @@ disable-on-move: false
 disable-on-leave: true
 # disable AFK mode when a player joins the server (makes Auto Relogging easier)
 disable-on-kick: true
-
-# Ignore AFK detection in these worlds
-ignored-worlds:
-  - some_world
 
 # Cooldown for the /afk Command in seconds
 cooldown: 2
